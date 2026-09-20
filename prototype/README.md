@@ -8,6 +8,8 @@ Ring + time + money layouts: **https://chingchung.github.io/income-timer/prototy
 
 Weight and tinted rendering: **https://chingchung.github.io/income-timer/prototype/weight.html**
 
+Live Activity: **https://chingchung.github.io/income-timer/prototype/live.html**
+
 `index.html` — a single self-contained file. Open it in any browser, or view
 the published version. No build step, no dependencies beyond web fonts.
 

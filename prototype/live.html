@@ -1,0 +1,449 @@
+<title>Live Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+HK:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sky:#bedde1; --card:#fff; --mint:#c9efd6; --mint-mid:#8fdcab;
+  --green:#57bc7c; --green-deep:#3f9d62;
+  --ink:#14252c; --ink-soft:#3d555e; --muted:#6f8990; --faint:#9db4ba;
+  --coral:#fc6a55; --coral-soft:#ffe4df; --line:#e6eff0;
+  --ui:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  --han:"Noto Sans HK","PingFang HK","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--sky)}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--han);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.bench{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+
+.mast{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mast h1{font-family:var(--ui);font-weight:800;font-size:clamp(23px,3.8vw,32px);
+  letter-spacing:-.025em;margin:0;line-height:1.1;flex:1;min-width:230px}
+.pill{background:var(--card);border-radius:999px;padding:7px 15px;font-size:12px;color:var(--muted);white-space:nowrap}
+.pill.dark{background:var(--ink);color:#fff}
+.pill a{color:inherit;text-decoration:none}
+.lede{margin:0 0 24px;color:var(--ink-soft);max-width:58ch}
+
+/* controls */
+.ctrl{background:var(--card);border-radius:26px;padding:20px;margin-bottom:12px}
+.ctop{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.clock{font-family:var(--ui);font-weight:800;font-size:29px;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.daytag{background:var(--mint);color:var(--green-deep);border-radius:999px;font-size:11.5px;padding:4px 12px}
+.spacer{flex:1}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:11px;color:var(--muted)}
+.f input{background:#f2f8f8;border:0;border-radius:12px;padding:10px 13px;width:126px;
+  font-family:var(--ui);font-weight:700;font-size:15px;color:var(--ink)}
+.f input:focus{outline:2px solid var(--green)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 70.8%,#ffd9d2 70.8% 75%,#e6eff0 75%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 70.8%,#ffd9d2 70.8% 75%,#e6eff0 75%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);margin-top:-6px}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);border:0}
+.ticks{display:flex;justify-content:space-between;font-family:var(--ui);font-size:10.5px;
+  font-weight:600;color:var(--faint);margin-bottom:12px}
+.ticks .dead{color:var(--coral)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips + .chips{margin-top:10px}
+.chip{background:#f2f8f8;border:0;border-radius:999px;cursor:pointer;color:var(--ink-soft);
+  font-family:var(--ui);font-size:12px;font-weight:600;padding:7px 14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip.spend{background:var(--coral-soft);color:#c93f2c}
+.chip.go{background:var(--green);color:#fff}
+.chip:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.sep{width:1px;height:22px;background:var(--line);margin-inline:6px}
+.clab{font-size:11px;color:var(--muted);margin-right:2px}
+
+/* status strip */
+.status{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+@media (max-width:660px){.status{grid-template-columns:1fr 1fr}}
+.st{background:var(--card);border-radius:18px;padding:15px 16px}
+.st span{font-size:11px;color:var(--muted);display:block}
+.st b{display:block;font-family:var(--ui);font-weight:800;font-size:19px;letter-spacing:-.03em;
+  margin-top:3px;font-variant-numeric:tabular-nums}
+.st.warn{background:var(--coral-soft)} .st.warn b{color:#c93f2c} .st.warn span{color:#a84a38}
+.st.ok{background:var(--mint)} .st.ok b{color:var(--green-deep)} .st.ok span{color:var(--green-deep)}
+
+/* layout */
+.stage{display:grid;grid-template-columns:302px minmax(0,1fr);gap:30px;align-items:start}
+@media (max-width:860px){.stage{grid-template-columns:1fr;justify-items:center}}
+.col{display:flex;flex-direction:column;gap:16px;width:100%;min-width:0}
+
+/* lock screen phone */
+.phone{width:302px;aspect-ratio:9/19.3;border-radius:44px;padding:8px;background:var(--card);
+  box-shadow:0 20px 44px -18px rgba(20,37,44,.32);flex:none}
+.lockscr{width:100%;height:100%;border-radius:37px;overflow:hidden;position:relative;
+  background:linear-gradient(170deg,#3b5c68 0%,#24404c 40%,#162b35 75%,#101f27 100%);
+  display:flex;flex-direction:column;align-items:center;padding:0 14px 18px}
+.island{width:88px;height:26px;border-radius:99px;background:#000;margin-top:11px;flex:none;
+  display:flex;align-items:center;justify-content:space-between;padding:0 9px;
+  transition:width .3s cubic-bezier(.3,1.3,.5,1)}
+.island.live{width:150px}
+.island .il{font-family:var(--ui);font-weight:700;font-size:10px;color:var(--green)}
+.island .ir{font-family:var(--ui);font-weight:700;font-size:10px;color:#fff;font-variant-numeric:tabular-nums}
+.lockdate{color:rgba(255,255,255,.78);font-size:11.5px;margin-top:16px}
+.locktime{font-family:var(--ui);font-weight:500;font-size:62px;color:#fff;letter-spacing:-.03em;
+  line-height:1;margin-top:2px;font-variant-numeric:tabular-nums}
+
+/* the Live Activity card */
+.la{width:100%;margin-top:auto;background:rgba(255,255,255,.14);border-radius:22px;padding:13px 14px;
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);color:#fff;
+  box-shadow:0 0 0 .5px rgba(255,255,255,.12) inset}
+.la.dead{opacity:.45}
+.lahead{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;
+  color:rgba(255,255,255,.6);margin-bottom:9px}
+.lahead .badge{display:flex;align-items:center;gap:5px}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.ldot.off{background:rgba(255,255,255,.4)}
+.larow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.lacol{min-width:0}
+.lacol .k{font-size:9px;color:rgba(255,255,255,.55);margin-bottom:2px}
+.lacol .v{font-family:var(--ui);font-weight:800;letter-spacing:-.035em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.v-money{font-size:25px}
+.v-time{font-size:22px}
+.stale{font-size:8.5px;color:rgba(255,255,255,.45);margin-top:4px}
+.labar{height:5px;background:rgba(255,255,255,.22);border-radius:99px;overflow:hidden;margin-top:11px}
+.labar i{display:block;height:100%;background:#fff;border-radius:99px}
+.lafoot{display:flex;justify-content:space-between;font-family:var(--ui);font-size:8.5px;
+  font-weight:600;color:rgba(255,255,255,.5);margin-top:5px}
+.dead-note{text-align:center;font-size:9.5px;color:#ffb9ad;margin-top:9px}
+
+/* dynamic island mocks */
+.di{background:var(--ink);border-radius:26px;padding:22px 20px}
+.di h3{margin:0 0 4px;font-family:var(--han);font-size:12.5px;font-weight:700;color:#fff}
+.di p{margin:0 0 15px;font-size:11.5px;color:#9fbcc2;line-height:1.55}
+.dirow{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.dicell{display:flex;flex-direction:column;gap:7px;align-items:center}
+.dicap{font-size:10.5px;color:#9fbcc2}
+.pillbar{background:#000;border-radius:99px;display:flex;align-items:center;justify-content:space-between;
+  height:37px;padding:0 13px;gap:12px}
+.pillbar.compact{width:172px}
+.pillbar.minimal{width:56px;justify-content:center;padding:0}
+.pl{font-family:var(--ui);font-weight:700;font-size:12px;color:var(--green);font-variant-numeric:tabular-nums}
+.pr{font-family:var(--ui);font-weight:700;font-size:12px;color:#fff;font-variant-numeric:tabular-nums}
+.mini-ring{width:22px;height:22px}
+.expanded{background:#000;border-radius:34px;padding:16px 18px;width:296px;max-width:100%;color:#fff}
+.exhead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.exk{font-size:9.5px;color:rgba(255,255,255,.5);margin-bottom:3px}
+.exv{font-family:var(--ui);font-weight:800;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
+.exbar{height:5px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-top:14px}
+.exbar i{display:block;height:100%;background:#fff;border-radius:99px}
+.exbot{display:flex;justify-content:space-between;font-family:var(--ui);font-size:9px;
+  font-weight:600;color:rgba(255,255,255,.5);margin-top:6px}
+
+.card{background:var(--card);border-radius:26px;padding:20px}
+.card h3{margin:0 0 10px;font-family:var(--han);font-size:12.5px;font-weight:700}
+.card p{margin:0 0 10px;font-size:12.5px;color:var(--ink-soft);line-height:1.65}
+.card p:last-child{margin-bottom:0}
+.card b{font-weight:700;color:var(--ink)}
+.warnbox{background:var(--coral-soft);border-radius:26px;padding:20px;color:#8f2e1c;
+  font-size:12.5px;line-height:1.65;margin-top:16px}
+.warnbox b{display:block;font-size:13.5px;margin-bottom:5px;color:#7a2717}
+.foot{margin-top:30px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot span:last-child{font-family:var(--ui);font-weight:600;color:var(--faint)}
+</style>
+
+<div class="bench">
+
+  <div class="mast">
+    <h1>Live Activity</h1>
+    <span class="pill dark"><a href="weight.html">← B 的輕重</a></span>
+    <span class="pill"><a href="./">主原型</a></span>
+  </div>
+  <p class="lede">鎖定畫面、Dynamic Island 三種型態，全部照真實規則跑。這一頁的重點是兩個硬限制：Live Activity 最多只能活八小時，而且它沒有時間軸，金額只有在你開 App 或者收到推播時才會更新。</p>
+
+  <div class="ctrl">
+    <div class="ctop">
+      <span class="clock" id="clk">11:20:00</span>
+      <span class="daytag" id="day">星期三・工作日</span>
+      <span class="spacer"></span>
+      <div class="f"><label for="sal">月薪</label>
+        <input id="sal" type="number" value="50000" min="0" step="1000" inputmode="numeric"></div>
+    </div>
+    <input type="range" id="tl" min="0" max="1439" value="680" step="1" aria-label="一日之中的時間">
+    <div class="ticks"><span>00:00</span><span>09:00 開始</span><span class="dead">17:00 死亡</span><span>23:59</span></div>
+    <div class="chips">
+      <span class="clab">速度</span>
+      <button class="chip" data-sp="0">暫停</button>
+      <button class="chip" data-sp="1" aria-pressed="true">1×</button>
+      <button class="chip" data-sp="60">60×</button>
+      <button class="chip" data-sp="300">300×</button>
+      <span class="sep"></span>
+      <button class="chip go" id="openApp">打開 App（更新金額）</button>
+      <span class="sep"></span>
+      <button class="chip spend" data-qa="42">＋$42</button>
+      <button class="chip spend" data-qa="68">＋$68</button>
+    </div>
+    <div class="chips">
+      <span class="clab">金額更新方式</span>
+      <button class="chip" data-up="manual" aria-pressed="true">只在開 App 時</button>
+      <button class="chip" data-up="push">每小時推播（需要伺服器）</button>
+    </div>
+  </div>
+
+  <div class="status">
+    <div class="st" id="stAge"><span>已經開始</span><b>—</b></div>
+    <div class="st" id="stLeft"><span>距離八小時上限</span><b>—</b></div>
+    <div class="st" id="stStale"><span>金額停留在</span><b>—</b></div>
+    <div class="st" id="stGap"><span>金額落後</span><b>—</b></div>
+  </div>
+
+  <div class="stage">
+
+    <div class="phone">
+      <div class="lockscr">
+        <div class="island" id="island">
+          <span class="il" id="islandL"></span>
+          <span class="ir" id="islandR"></span>
+        </div>
+        <div class="lockdate" id="lockDate">星期三 9月23日</div>
+        <div class="locktime" id="lockTime">11:20</div>
+
+        <div class="la" id="laCard">
+          <div class="lahead">
+            <span class="badge"><span class="ldot" id="laDot"></span> Income Timer</span>
+            <span id="laState">進行中</span>
+          </div>
+          <div class="larow">
+            <div class="lacol">
+              <div class="k">今日淨收</div>
+              <div class="v v-money" id="laMoney">$0.00</div>
+              <div class="stale" id="laStale"></div>
+            </div>
+            <div class="lacol" style="text-align:right">
+              <div class="k">距離收工</div>
+              <div class="v v-time" id="laTime">00:00:00</div>
+            </div>
+          </div>
+          <div class="labar"><i id="laBar" style="width:0%"></i></div>
+          <div class="lafoot"><span>09:00</span><span id="laPct">0%</span><span>18:00</span></div>
+          <div class="dead-note" id="laDead" hidden>系統已在 17:00 結束這個 Live Activity</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+
+      <div class="di">
+        <h3>Dynamic Island</h3>
+        <p>三種型態由系統決定。只有一個活動時用精簡型，多個時用最簡型，長按展開。</p>
+        <div class="dirow">
+          <div class="dicell">
+            <div class="pillbar compact">
+              <span class="pl" id="diL">$0</span>
+              <span class="pr" id="diR">0:00</span>
+            </div>
+            <span class="dicap">精簡</span>
+          </div>
+          <div class="dicell">
+            <div class="pillbar minimal">
+              <svg class="mini-ring" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="3"></circle>
+                <circle id="diRing" cx="12" cy="12" r="9" fill="none" stroke="#57bc7c" stroke-width="3"
+                  stroke-linecap="round" stroke-dasharray="56.55" stroke-dashoffset="56.55"
+                  transform="rotate(-90 12 12)"></circle>
+              </svg>
+            </div>
+            <span class="dicap">最簡</span>
+          </div>
+        </div>
+        <div class="dirow" style="margin-top:18px">
+          <div class="dicell">
+            <div class="expanded">
+              <div class="exhead">
+                <div>
+                  <div class="exk">今日淨收</div>
+                  <div class="exv" id="exMoney" style="font-size:27px">$0.00</div>
+                  <div class="exk" id="exStale" style="margin-top:4px"></div>
+                </div>
+                <div style="text-align:right">
+                  <div class="exk">距離收工</div>
+                  <div class="exv" id="exTime" style="font-size:23px">00:00:00</div>
+                  <div class="exk" id="exDebt" style="margin-top:4px"></div>
+                </div>
+              </div>
+              <div class="exbar"><i id="exBar" style="width:0%"></i></div>
+              <div class="exbot"><span>已返工 <span id="exWorked">00:00:00</span></span><span id="exPct">0%</span></div>
+            </div>
+            <span class="dicap">展開（長按）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>什麼會動，什麼不會</h3>
+        <p><b>每秒都在跳：</b>距離收工、已返工。這兩個是系統自己重繪的時間文字，不需要任何更新。</p>
+        <p><b>連續但極慢：</b>進度條。它吃一個時間區間，自己走完整天。</p>
+        <p><b>完全不會自己動：</b>金額。Live Activity 沒有時間軸，跟 widget 不同。它的內容只有在 App 執行時呼叫更新，或者收到推播時才會變。所以上面的金額會標明它停留在哪個時間。</p>
+      </div>
+
+      <div class="warnbox">
+        <b>八小時上限撞正你的工時</b>
+        Apple 明文規定 Live Activity 最多活八小時，之後系統自動結束並立即從 Dynamic Island 移除，只在鎖定畫面留一個不再更新的殘影，最多再留四小時。
+        九點開始的話，它在<b>十七點死亡</b>，而你六點才收工。最後那一小時完全沒有 Live Activity，偏偏那是一日之中最想看的一小時。把時間拖到 17:00 就可以看到。
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>示範數據，並非真實收支。</span>
+    <span id="rateOut">—</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var LIMIT_H = 8;
+  var S={salary:50000,startMin:540,endMin:1080,speed:1,simMs:(11*60+20)*60000,dow:3,
+         upmode:"manual", moneyAsOfMin:10*60+45, expenses:[{min:495,amt:42},{min:785,amt:68}]};
+
+  function paidSec(){ return (S.endMin-S.startMin)*60; }
+  function workDays(){
+    var n=new Date(),y=n.getFullYear(),m=n.getMonth();
+    var dim=new Date(y,m+1,0).getDate(),c=0;
+    for(var d=1;d<=dim;d++){var w=new Date(y,m,d).getDay(); if(w>=1&&w<=5)c++;}
+    return c;
+  }
+  function rate(){ return S.salary/(workDays()*paidSec()); }
+  function workday(){ return S.dow>=1&&S.dow<=5; }
+  function elapsedAt(min){
+    if(!workday()) return 0;
+    return Math.min(Math.max((min-S.startMin)*60,0),paidSec());
+  }
+  function grossAtMin(min){ return elapsedAt(min)*rate(); }
+  function spentAtMin(min){
+    var t=0;
+    for(var i=0;i<S.expenses.length;i++) if(S.expenses[i].min<=min) t+=S.expenses[i].amt;
+    return t;
+  }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function hms(s){ s=Math.max(0,Math.floor(s));
+    return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60); }
+  function hm(s){ s=Math.max(0,Math.floor(s)); return Math.floor(s/3600)+":"+pad(Math.floor(s%3600/60)); }
+  function ms_(s){ s=Math.max(0,Math.floor(s)); return pad(Math.floor(s/60))+":"+pad(s%60); }
+  function clockMin(min){ min=Math.floor(min); return pad(Math.floor(min/60)%24)+":"+pad(min%60); }
+  function money(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money0(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+  var DOW=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+
+  function all(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  function g(id){ return document.getElementById(id); }
+  var tl=g("tl");
+  g("sal").addEventListener("input",function(e){ S.salary=parseFloat(e.target.value)||0; });
+  tl.addEventListener("input",function(e){ S.speed=0; setChip("data-sp","0"); S.simMs=(+e.target.value)*60000; });
+  g("openApp").addEventListener("click",function(){ S.moneyAsOfMin=S.simMs/60000; });
+
+  function setChip(attr,val){
+    all("["+attr+"]").forEach(function(c){
+      c.setAttribute("aria-pressed", c.getAttribute(attr)===val?"true":"false"); });
+  }
+  document.addEventListener("click",function(ev){
+    var sp=ev.target.closest("[data-sp]");
+    if(sp){ S.speed=+sp.getAttribute("data-sp"); setChip("data-sp",sp.getAttribute("data-sp")); return; }
+    var up=ev.target.closest("[data-up]");
+    if(up){ S.upmode=up.getAttribute("data-up"); setChip("data-up",S.upmode); return; }
+    var qa=ev.target.closest("[data-qa]");
+    if(qa){
+      var amt=parseFloat(qa.getAttribute("data-qa"));
+      S.expenses.push({min:S.simMs/60000,amt:amt});
+      // logging happens in the app, so the activity is updated at the same moment
+      S.moneyAsOfMin=S.simMs/60000;
+    }
+  });
+
+  function render(){
+    var r=rate(), nowMin=S.simMs/60000;
+
+    // an hourly push keeps the figure fresher, at the cost of needing a server
+    if(S.upmode==="push"){
+      var lastPush=Math.floor(nowMin/60)*60;
+      if(lastPush>S.moneyAsOfMin && lastPush>=S.startMin) S.moneyAsOfMin=lastPush;
+    }
+    if(S.moneyAsOfMin>nowMin) S.moneyAsOfMin=nowMin;
+
+    var startedMin=S.startMin;
+    var ageMin=Math.max(0,nowMin-startedMin);
+    var limitMin=LIMIT_H*60;
+    var alive=workday() && nowMin>=startedMin && ageMin<limitMin;
+    var notYet=nowMin<startedMin;
+
+    var asOf=Math.max(S.moneyAsOfMin,startedMin);
+    var mGross=grossAtMin(asOf), mSpent=spentAtMin(asOf), mNet=mGross-mSpent;
+    var liveGross=grossAtMin(nowMin), liveSpent=spentAtMin(nowMin), owe=liveSpent-liveGross;
+    var el, frac;
+    var deathMin=startedMin+limitMin;
+    // once the system ends the activity its content is final, so freeze the figures
+    var shownMin=alive||notYet?nowMin:Math.min(nowMin,deathMin);
+    var toEnd=(S.endMin-shownMin)*60;
+    var lagMin=Math.max(0,nowMin-asOf);
+    el=elapsedAt(shownMin); frac=el/paidSec();
+    var lagMoney=(grossAtMin(nowMin)-grossAtMin(asOf)) - (spentAtMin(nowMin)-spentAtMin(asOf));
+
+    g("clk").textContent=hms(S.simMs/1000);
+    g("day").textContent=DOW[S.dow]+(workday()?"・工作日":"・唔使返工");
+    if(!tl.matches(":active")) tl.value=Math.floor(nowMin);
+    g("rateOut").textContent="每秒 $"+r.toFixed(4);
+    g("lockTime").textContent=clockMin(nowMin);
+    g("lockDate").textContent=DOW[S.dow]+" 9月23日";
+
+    // status strip
+    g("stAge").querySelector("b").textContent = notYet?"未開始":(hm(ageMin*60)+" 小時");
+    var stLeft=g("stLeft");
+    stLeft.querySelector("b").textContent = notYet?"—":(alive?hm((limitMin-ageMin)*60):"已死亡");
+    stLeft.className="st"+(notYet?"":(alive?(limitMin-ageMin<60?" warn":" ok"):" warn"));
+    g("stStale").querySelector("b").textContent = notYet?"—":clockMin(asOf);
+    var stGap=g("stGap");
+    stGap.querySelector("b").textContent = notYet?"—":(lagMin<1?"即時":(Math.round(lagMin)+" 分・"+money0(lagMoney)));
+    stGap.className="st"+(lagMin>=15?" warn":(lagMin<1?" ok":""));
+
+    // lock screen card
+    var card=g("laCard");
+    card.classList.toggle("dead",!alive);
+    g("laDead").hidden = alive || notYet || !workday();
+    g("laDot").className="ldot"+(alive?"":" off");
+    g("laState").textContent = notYet?"未開始":(alive?"進行中":"已結束");
+    g("laMoney").textContent=money(mNet);
+    g("laMoney").style.color = mNet<0?"#ffb9ad":"#fff";
+    g("laStale").textContent = lagMin<1?"即時":("截至 "+clockMin(asOf)+"・落後 "+money0(lagMoney));
+    g("laTime").textContent = !workday()?"—":(notYet?"未開工":(toEnd<=0?"已收工":hms(toEnd)));
+    g("laBar").style.width=(frac*100).toFixed(2)+"%";
+    g("laPct").textContent=(frac*100).toFixed(1)+"%";
+
+    // dynamic island
+    var island=g("island");
+    island.classList.toggle("live",alive);
+    g("islandL").textContent = alive?money0(mNet):"";
+    g("islandR").textContent = alive?(toEnd>0?hm(toEnd):"收工"):"";
+    g("diL").textContent=money0(mNet);
+    g("diL").style.color = mNet<0?"#fc6a55":"#57bc7c";
+    g("diR").textContent = toEnd>0?hm(toEnd):"收工";
+    g("diRing").setAttribute("stroke-dashoffset",(56.55*(1-frac)).toFixed(2));
+
+    // expanded
+    g("exMoney").textContent=money(mNet);
+    g("exMoney").style.color = mNet<0?"#fc6a55":"#fff";
+    g("exStale").textContent = lagMin<1?"即時":("截至 "+clockMin(asOf));
+    g("exTime").textContent = !workday()?"—":(notYet?"未開工":(toEnd<=0?"已收工":hms(toEnd)));
+    g("exDebt").textContent = liveSpent<=0?"今日冇支出":(owe<=0?("用咗 "+money0(liveSpent)):("欠 "+money0(owe)+"・"+ms_(owe/r)));
+    g("exBar").style.width=(frac*100).toFixed(2)+"%";
+    g("exWorked").textContent=hms(el);
+    g("exPct").textContent=(frac*100).toFixed(1)+"%";
+  }
+
+  var last=performance.now();
+  function frame(now){
+    var dt=now-last; last=now;
+    if(S.speed>0) S.simMs=(S.simMs+dt*S.speed)%86400000;
+    render();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
