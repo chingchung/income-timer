@@ -58,8 +58,10 @@ positive.
 
 **Lock Screen.** A single inline figure, plus a circular progress of the workday.
 
-All of them update the money every minute and the time every second, as per the
-[technical reality check](02-technical-constraints.md).
+All of them step the money every five minutes and tick the time every second,
+as per the [technical reality check](02-technical-constraints.md). The small
+widget leads on the countdown to the next milestone, which is the only
+money-related figure that moves every second on the home screen.
 
 ## Stats
 

@@ -23,39 +23,69 @@ you plan around it.** Plan around it.
 
 ## What actually is possible, and where
 
+Apple states it plainly: "your widget extension is not continually active, even
+if the widget is onscreen."
+
 | Surface | Realistic update rate | Notes |
 | --- | --- | --- |
 | In-app hero screen | 60 fps, true per-second or smoother | The app is running. Full control. This is where the gimmick lives. |
-| Home-screen widget | Every 60 seconds | Achieved with pre-computed timeline entries, not refreshes. See below. |
-| Home-screen widget, seconds element | Every second | Only for *time*-formatted text, via the system's self-updating timer text. |
-| Lock Screen / Dynamic Island Live Activity | Money every ~15 min; elapsed time every second | Same constraint as widgets, plus push-update limits. |
+| Home-screen widget, money | Every 5 minutes | Apple's stated floor for timeline entry spacing. See below. |
+| Home-screen widget, time elements | Every second | System-rendered date text and timer progress bars, which update without waking your process. |
+| Lock Screen / Dynamic Island Live Activity | Money on the same footing; elapsed time every second | Same rendering model as widgets, plus push-update limits. |
 | Apple Watch complication | Every ~15 min | Tightest budget of all. Later phase. |
 
-## The technique that makes the widget feel alive
+### The five-minute floor
 
-Two elements side by side:
+This is the number that shapes the widget, and it is stricter than it first
+appears. Apple's guidance on timeline entries is explicit: create entries that
+are **at least about 5 minutes apart**, and keep the interval as large as the
+content allows.
 
-**1. The money number, updated every minute — cheaply.**
-When the widget asks for a timeline, we do not return one entry. We return one
-entry per minute for the rest of the working day. Because the earnings figure is
-a pure function of time (`rate × elapsed seconds`), we can compute all of them up
-front with no further code execution. A 9-to-6 day is 540 entries, each tiny.
-The system then flips through them on schedule without waking us at all. One
-timeline request covers the whole day, so the refresh budget is barely touched.
+So the money figure cannot climb every minute. It climbs every five. At a
+50,000/month salary that is a jump of about $21 each time. Visible and
+satisfying when you happen to be looking, but it is a step, not a roll.
 
-The number therefore climbs every 60 seconds, all day, reliably. Watching it for
-ten seconds you will see it change once. That reads as live.
+The reload budget itself is separate and more generous than people assume:
+roughly 40 to 70 reloads a day for a frequently viewed widget, which is a
+reload every 15 to 60 minutes. Crucially, **one reload can return many
+entries.** A 9-to-6 day at five-minute spacing is 108 entries, which the system
+then steps through on schedule without waking the extension again. The whole
+workday therefore costs a single reload. The budget is not the binding
+constraint here; the five-minute floor is.
 
-**2. A seconds-level element that genuinely ticks.**
-SwiftUI has date-styled text that the *system* re-renders every second inside a
-widget without waking your process. It only formats time, not currency — so we
-use it for a ticking "worked today 03:42:18" line directly under the money. The
-eye reads the two together as one live meter.
+### The two elements that genuinely tick
 
-**Do not fake per-second money on the widget.** Showing a number that only
-changes each minute while claiming it is per-second is fine; trying to
-manufacture per-second digits will either be impossible or get the widget
-throttled into staleness.
+Some SwiftUI views keep updating while the widget is visible, because the
+system re-renders them itself rather than waking your code. There are exactly
+two kinds, and both are time-based:
+
+**Self-updating date text.** A text view given a date and a timer, relative or
+offset style counts up or down every second, indefinitely, with no timeline
+entries at all. It formats time only. There is no way to scale it, multiply it,
+or format it as currency.
+
+**A timer-driven progress bar.** A progress view initialised with a date
+interval fills continuously and smoothly across that interval, again with no
+entries. Given the workday as its interval, it is a bar that visibly creeps all
+day.
+
+Put next to the money figure, these carry the liveness: a ticking "worked today
+03:42:18", a bar advancing toward knock-off time, and a figure that steps every
+five minutes. The eye reads the group as one live meter.
+
+### The one live money number you can have
+
+Because the self-updating text counts real seconds, it cannot show an amount.
+But it can show **time until an amount**. A countdown to the next milestone —
+"距離今日賺到 $2,000：08:32" — ticks every single second, is genuinely about
+money, and costs nothing. It is the only per-second money-related number
+available on the home screen, and it is worth building the small widget around
+rather than treating as a footnote.
+
+**Do not try to manufacture per-second money digits.** Sub-five-minute entries
+work against Apple's stated guidance, will be coalesced or throttled, and leave
+the widget stale. The honest design accepts the step and spends its effort on
+the elements that really do move.
 
 ## Where the real gimmick lives: in-app
 

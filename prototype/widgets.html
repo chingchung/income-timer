@@ -1,0 +1,420 @@
+<title>Widget Combinations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+HK:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sky:#bedde1; --card:#fff; --mint:#c9efd6; --mint-mid:#8fdcab;
+  --green:#57bc7c; --green-deep:#3f9d62;
+  --ink:#14252c; --ink-soft:#3d555e; --muted:#6f8990; --faint:#9db4ba;
+  --coral:#fc6a55; --coral-soft:#ffe4df; --line:#e6eff0;
+  --ui:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  --han:"Noto Sans HK","PingFang HK","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--sky)}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--han);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.lat{font-family:var(--ui)}
+.bench{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+
+.mast{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.mast h1{font-family:var(--ui);font-weight:800;font-size:clamp(23px,3.8vw,32px);
+  letter-spacing:-.025em;margin:0;line-height:1.1;flex:1;min-width:200px}
+.pill{background:var(--card);border-radius:999px;padding:7px 15px;font-size:12px;color:var(--muted);white-space:nowrap}
+.pill.dark{background:var(--ink);color:#fff}
+.pill a{color:inherit}
+.lede{margin:0 0 24px;color:var(--ink-soft);max-width:56ch}
+
+/* ---------- control bar ---------- */
+.ctrl{background:var(--card);border-radius:26px;padding:20px;margin-bottom:12px}
+.ctop{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.clock{font-family:var(--ui);font-weight:800;font-size:29px;letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums}
+.daytag{background:var(--mint);color:var(--green-deep);border-radius:999px;font-size:11.5px;padding:4px 12px}
+.spacer{flex:1}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:11px;color:var(--muted)}
+.f input{background:#f2f8f8;border:0;border-radius:12px;padding:10px 13px;width:130px;
+  font-family:var(--ui);font-weight:700;font-size:15px;color:var(--ink)}
+.f input:focus{outline:2px solid var(--green)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:var(--ink);margin-top:-6px}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);border:0}
+.ticks{display:flex;justify-content:space-between;font-family:var(--ui);font-size:10.5px;
+  font-weight:600;color:var(--faint);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{background:#f2f8f8;border:0;border-radius:999px;cursor:pointer;color:var(--ink-soft);
+  font-family:var(--ui);font-size:12px;font-weight:600;padding:7px 14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip.spend{background:var(--coral-soft);color:#c93f2c}
+.chip.spend:active{background:var(--coral);color:#fff}
+.chip:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.sep{width:1px;height:22px;background:var(--line);margin-inline:6px}
+.clab{font-size:11px;color:var(--muted);margin-right:2px}
+
+/* ---------- the honesty switch ---------- */
+.truth{background:var(--ink);color:#fff;border-radius:26px;padding:18px 20px;margin-bottom:22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.truth .t{flex:1;min-width:230px}
+.truth b{display:block;font-size:14px;margin-bottom:2px}
+.truth span{font-size:12px;color:#9fbcc2;line-height:1.5}
+.sw{display:flex;background:#24373f;border-radius:999px;padding:4px;gap:4px}
+.sw button{background:none;border:0;border-radius:999px;cursor:pointer;color:#9fbcc2;
+  font-family:var(--han);font-size:12.5px;font-weight:500;padding:9px 16px;white-space:nowrap}
+.sw button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700}
+.sw button:focus-visible{outline:2px solid var(--mint-mid);outline-offset:2px}
+
+/* ---------- widget grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media (max-width:840px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.slot{display:flex;flex-direction:column;gap:9px}
+.slot.wide{grid-column:1/-1}
+
+.slothead{display:flex;align-items:baseline;gap:8px}
+.slothead i{font-style:normal;font-family:var(--ui);font-weight:800;font-size:11px;
+  color:var(--green-deep);background:var(--mint);border-radius:999px;padding:2px 9px}
+.slothead b{font-size:13.5px}
+.wall{background:linear-gradient(165deg,#d6edf0,#e6f5ee 60%,#f0faf3);border-radius:24px;
+  padding:20px;display:flex;justify-content:center}
+.note{font-size:11.5px;color:var(--muted);line-height:1.55}
+.note b{color:var(--ink);font-weight:700}
+
+/* ---------- the widget itself ---------- */
+.w{background:#fff;border-radius:22px;box-shadow:0 4px 14px rgba(20,37,44,.1);
+  width:172px;height:172px;padding:15px;display:flex;flex-direction:column;overflow:hidden}
+.w.md{width:100%;max-width:372px;height:172px}
+.wlab{font-size:9.5px;color:var(--muted);display:flex;align-items:center;gap:5px;line-height:1.3}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex:none}
+.dot.off{background:var(--faint)}
+.big{font-family:var(--ui);font-weight:800;letter-spacing:-.035em;line-height:1;
+  font-variant-numeric:tabular-nums;margin-top:auto}
+.tick{font-size:27px}
+.small{font-family:var(--ui);font-size:10.5px;font-weight:600;color:var(--faint);margin-top:5px;
+  font-variant-numeric:tabular-nums}
+.small.warn{color:var(--coral)}
+.flash{animation:fl .5s ease}
+@keyframes fl{0%{background:var(--mint)}100%{background:transparent}}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:9px}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.ringwrap{margin-top:auto;display:flex;justify-content:center;position:relative}
+.ringtx{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:1px}
+.ringtx b{font-family:var(--ui);font-weight:800;font-size:17px;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.ringtx span{font-family:var(--ui);font-size:9px;font-weight:600;color:var(--faint)}
+.mdrow{display:flex;gap:16px;height:100%}
+.mdrow .c{flex:1;display:flex;flex-direction:column;min-width:0}
+.mdrow .c + .c{border-left:1px solid var(--line);padding-left:16px}
+.paid{color:var(--green-deep)}
+
+.foot{margin-top:34px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;
+  gap:14px;flex-wrap:wrap}
+.foot span:last-child{font-family:var(--ui);font-weight:600;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+
+<div class="bench">
+
+  <div class="mast">
+    <h1>Widget 組合實驗室</h1>
+    <span class="pill dark"><a href="./">← 主原型</a></span>
+  </div>
+  <p class="lede">六個方案同時跑，全部用 iOS 真正做得到的節奏：時間逐秒跳、金額每五分鐘跳一格、進度條連續但極慢。下面那個開關可以切換成「假設 iOS 沒有限制」，直接比較你失去了什麼。</p>
+
+  <div class="ctrl">
+    <div class="ctop">
+      <span class="clock" id="clk">09:05:00</span>
+      <span class="daytag" id="day">星期三・工作日</span>
+      <span class="spacer"></span>
+      <div class="f"><label for="sal">月薪</label>
+        <input id="sal" type="number" value="50000" min="0" step="1000" inputmode="numeric"></div>
+    </div>
+    <input type="range" id="tl" min="0" max="1439" value="545" step="1" aria-label="一日之中的時間">
+    <div class="ticks"><span>00:00</span><span>09:00</span><span>18:00</span><span>23:59</span></div>
+    <div class="chips">
+      <span class="clab">速度</span>
+      <button class="chip" data-sp="0">暫停</button>
+      <button class="chip" data-sp="1" aria-pressed="true">1×</button>
+      <button class="chip" data-sp="10">10×</button>
+      <button class="chip" data-sp="60">60×</button>
+      <button class="chip" data-sp="300">300×</button>
+      <span class="sep"></span>
+      <span class="clab">記一筆</span>
+      <button class="chip spend" data-qa="42">＋$42</button>
+      <button class="chip spend" data-qa="68">＋$68</button>
+      <button class="chip spend" data-qa="160">＋$160</button>
+      <button class="chip" id="clr">清空支出</button>
+    </div>
+  </div>
+
+  <div class="truth">
+    <div class="t">
+      <b>模擬 iOS 的真實限制</b>
+      <span id="truthNote">金額每 5 分鐘跳一格。這是 widget 實際做得到的樣子。</span>
+    </div>
+    <div class="sw" role="group" aria-label="更新模式">
+      <button id="mReal" aria-pressed="true">真實限制</button>
+      <button id="mFake" aria-pressed="false">假設冇限制</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+
+    <div class="slot">
+      <div class="slothead"><i>A</i><b>金額主導</b></div>
+      <div class="wall"><div class="w">
+        <div class="wlab"><span class="dot" id="dA"></span>今日淨收</div>
+        <div class="big tick" id="aMoney">$0.00</div>
+        <div class="small">已返工 <span id="aWorked">00:00:00</span></div>
+      </div></div>
+      <p class="note">原本的方案。大字每 5 分鐘先郁一次，靠下面細細的計時撐住生氣。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>B</i><b>收工倒數</b></div>
+      <div class="wall"><div class="w">
+        <div class="wlab"><span class="dot" id="dB"></span>距離收工</div>
+        <div class="big tick" id="bCount">00:00:00</div>
+        <div class="small">今日已賺 <span id="bMoney">$0</span></div>
+      </div></div>
+      <p class="note">大字<b>每秒都在跳</b>。對一個度日如年的人，這可能是最有感覺的數字。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>C</i><b>債務時鐘</b></div>
+      <div class="wall"><div class="w">
+        <div class="wlab"><span class="dot" id="dC"></span><span id="cLab">仲要做幾耐先賺返</span></div>
+        <div class="big tick" id="cCount">00:00</div>
+        <div class="small warn" id="cOwe">未有支出</div>
+      </div></div>
+      <p class="note">記一筆支出，這個鐘就開始倒數。<b>每秒跳</b>，而且直接把記帳變成主畫面上唯一會動的東西。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>D</i><b>里程碑倒數</b></div>
+      <div class="wall"><div class="w">
+        <div class="wlab"><span class="dot" id="dD"></span>距離 <span id="dTarget">$500</span></div>
+        <div class="big tick" id="dCount">00:00:00</div>
+        <div class="small">今日已賺 <span id="dMoney">$0</span></div>
+      </div></div>
+      <p class="note">仍然是關於錢，只是用時間表達，所以<b>每秒跳</b>。達標後自動跳去下一個。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>E</i><b>進度環</b></div>
+      <div class="wall"><div class="w">
+        <div class="wlab">今日進度</div>
+        <div class="ringwrap">
+          <svg width="104" height="104" viewBox="0 0 104 104" aria-hidden="true">
+            <circle cx="52" cy="52" r="45" fill="none" stroke="#e6eff0" stroke-width="9"></circle>
+            <circle id="eRing" cx="52" cy="52" r="45" fill="none" stroke="#57bc7c" stroke-width="9"
+              stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="282.7"
+              transform="rotate(-90 52 52)"></circle>
+          </svg>
+          <div class="ringtx"><b id="eMoney">$0</b><span id="ePct">0%</span></div>
+        </div>
+      </div></div>
+      <p class="note">環是連續動的，但一小時只走 4 度。<b>盯著看你是察覺不到的</b>，這一格正是用來證明這件事。</p>
+    </div>
+
+    <div class="slot wide">
+      <div class="slothead"><i>F</i><b>三合一（中尺寸）</b></div>
+      <div class="wall"><div class="w md">
+        <div class="mdrow">
+          <div class="c">
+            <div class="wlab"><span class="dot" id="dF"></span>今日淨收</div>
+            <div class="big" id="fMoney" style="font-size:31px">$0.00</div>
+            <div class="small">已返工 <span id="fWorked">00:00:00</span></div>
+            <div class="bar"><i id="fBar" style="width:0%"></i></div>
+          </div>
+          <div class="c">
+            <div class="wlab">距離收工</div>
+            <div class="big tick" id="fCount" style="font-size:24px">00:00:00</div>
+            <div class="small" id="fDebt">今日冇支出</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">把會跳的、每五分鐘郁一格的、同連續爬的三種元素放埋一齊。中尺寸有足夠空間，代價是佔主畫面兩格。</p>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>示範數據，並非真實收支。金額節奏依 Apple 對時間軸每格至少相距約 5 分鐘的規定模擬。</span>
+    <span id="rateOut">—</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STEP = 5*60000;               // Apple: timeline entries >= ~5 min apart
+  var S = {
+    salary:50000, startMin:540, endMin:1080,
+    speed:1, simMs:(9*60+5)*60000, dow:3, honest:true,
+    expenses:[{min:495, amt:42}]    // 08:15 coffee
+  };
+
+  function paidSec(){ return (S.endMin - S.startMin) * 60; }
+  function workDays(){
+    var n=new Date(), y=n.getFullYear(), m=n.getMonth();
+    var dim=new Date(y,m+1,0).getDate(), c=0;
+    for (var d=1; d<=dim; d++){ var w=new Date(y,m,d).getDay(); if (w>=1&&w<=5) c++; }
+    return c;
+  }
+  function rate(){ return S.salary / (workDays() * paidSec()); }
+  function workday(){ return S.dow>=1 && S.dow<=5; }
+  function elapsed(ms){
+    if (!workday()) return 0;
+    return Math.min(Math.max((ms/60000 - S.startMin)*60, 0), paidSec());
+  }
+  function grossAt(ms){ return elapsed(ms) * rate(); }
+  function spentAt(ms){
+    var mi = ms/60000, t = 0;
+    for (var i=0;i<S.expenses.length;i++) if (S.expenses[i].min <= mi) t += S.expenses[i].amt;
+    return t;
+  }
+  // money is only allowed to move on the 5-minute grid when honest mode is on
+  function moneyMs(ms){ return S.honest ? Math.floor(ms/STEP)*STEP : ms; }
+
+  function pad(n){ return (n<10?"0":"")+n; }
+  function hms(s){ s=Math.max(0,Math.floor(s));
+    return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60); }
+  function ms_(s){ s=Math.max(0,Math.floor(s)); return pad(Math.floor(s/60))+":"+pad(s%60); }
+  function clock(ms){ var m=Math.floor(ms/60000); return pad(Math.floor(m/60)%24)+":"+pad(m%60); }
+  function money(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money0(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+  var DOW=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+
+  function milestoneStep(){
+    var daily = rate()*paidSec();
+    return daily>4000?1000 : daily>1500?500 : daily>600?200 : 100;
+  }
+
+  var E={};
+  ["clk","day","tl","sal","rateOut","truthNote","dA","dB","dC","dD","dF",
+   "aMoney","aWorked","bCount","bMoney","cCount","cOwe","cLab","dTarget","dCount","dMoney",
+   "eRing","eMoney","ePct","fMoney","fWorked","fBar","fCount","fDebt"]
+   .forEach(function(k){ E[k]=document.getElementById(k); });
+
+  function on(id,ev,fn){ document.getElementById(id).addEventListener(ev,fn); }
+  on("sal","input",function(e){ S.salary = parseFloat(e.target.value)||0; });
+  on("tl","input",function(e){ S.speed=0; setChip("data-sp","0"); S.simMs=(+e.target.value)*60000; });
+  on("clr","click",function(){ S.expenses=[]; });
+
+  function setChip(attr,val){
+    var c=document.querySelectorAll("["+attr+"]");
+    for (var i=0;i<c.length;i++) c[i].setAttribute("aria-pressed", c[i].getAttribute(attr)===val?"true":"false");
+  }
+  document.addEventListener("click",function(ev){
+    var sp=ev.target.closest("[data-sp]");
+    if (sp){ S.speed=+sp.getAttribute("data-sp"); setChip("data-sp",sp.getAttribute("data-sp")); return; }
+    var qa=ev.target.closest("[data-qa]");
+    if (qa){ S.expenses.push({min:S.simMs/60000, amt:parseFloat(qa.getAttribute("data-qa"))}); }
+  });
+
+  function setMode(honest){
+    S.honest = honest;
+    document.getElementById("mReal").setAttribute("aria-pressed", honest?"true":"false");
+    document.getElementById("mFake").setAttribute("aria-pressed", honest?"false":"true");
+    E.truthNote.textContent = honest
+      ? "金額每 5 分鐘跳一格。這是 widget 實際做得到的樣子。"
+      : "金額逐秒滾動。iOS 做不到，這一格只是給你比較用。";
+  }
+  document.getElementById("mReal").addEventListener("click",function(){ setMode(true); });
+  document.getElementById("mFake").addEventListener("click",function(){ setMode(false); });
+
+  var lastStep=-1;
+  function flash(){
+    if (!S.honest) return;
+    ["aMoney","bMoney","dMoney","eMoney","fMoney"].forEach(function(k){
+      E[k].classList.remove("flash"); void E[k].offsetWidth; E[k].classList.add("flash");
+    });
+  }
+
+  function render(){
+    var r=rate(), ms=S.simMs;
+    var mms=moneyMs(ms);
+    var gross=grossAt(mms), spent=spentAt(mms), net=gross-spent;
+    var liveGross=grossAt(ms), liveSpent=spentAt(ms);   // for time-based figures, always exact
+    var el=elapsed(ms);
+    var working = workday() && ms/60000>=S.startMin && ms/60000<S.endMin;
+
+    var st=Math.floor(ms/STEP);
+    if (st!==lastStep){ if (lastStep!==-1) flash(); lastStep=st; }
+
+    E.clk.textContent = hms(ms/1000);
+    E.day.textContent = DOW[S.dow]+(workday()?"・工作日":"・唔使返工");
+    if (!E.tl.matches(":active")) E.tl.value = Math.floor(ms/60000);
+    E.rateOut.textContent = "每秒 $"+r.toFixed(4)+"　每 5 分鐘 "+money(r*300);
+    ["dA","dB","dC","dD","dF"].forEach(function(k){ E[k].className="dot"+(working?"":" off"); });
+
+    /* A */
+    E.aMoney.textContent = money(net);
+    E.aMoney.style.color = net<0 ? "var(--coral)" : "var(--ink)";
+    E.aWorked.textContent = hms(el);
+
+    /* B — countdown to knock-off */
+    var toEnd = (S.endMin*60) - (ms/1000);
+    E.bCount.textContent = !workday() ? "—" : (toEnd<=0 ? "已收工" : (ms/60000<S.startMin ? "未開工" : hms(toEnd)));
+    E.bMoney.textContent = money0(gross);
+
+    /* C — debt clock */
+    var owe = liveSpent - liveGross;
+    if (liveSpent<=0){
+      E.cLab.textContent="仲要做幾耐先賺返"; E.cCount.textContent="—"; E.cOwe.textContent="未有支出";
+      E.cOwe.className="small warn"; E.cCount.style.color="var(--faint)";
+    } else if (owe<=0){
+      E.cLab.textContent="今日支出"; E.cCount.textContent="已賺返"; E.cOwe.textContent="用咗 "+money0(liveSpent);
+      E.cOwe.className="small"; E.cCount.style.color="var(--green-deep)";
+    } else {
+      E.cLab.textContent="仲要做幾耐先賺返"; E.cCount.textContent=ms_(owe/r);
+      E.cOwe.textContent="欠 "+money0(owe); E.cOwe.className="small warn"; E.cCount.style.color="var(--coral)";
+    }
+
+    /* D — milestone countdown */
+    var stp=milestoneStep();
+    var target=(Math.floor(liveGross/stp)+1)*stp;
+    var dailyMax=r*paidSec();
+    E.dTarget.textContent = money0(target);
+    E.dCount.textContent = (!working && liveGross<=0) ? "—"
+      : (target>dailyMax ? "今日到頂" : hms((target-liveGross)/r));
+    E.dCount.style.color = (target>dailyMax) ? "var(--faint)" : "var(--ink)";
+    E.dMoney.textContent = money0(gross);
+
+    /* E — progress ring */
+    var frac = el/paidSec();
+    E.eRing.setAttribute("stroke-dashoffset", (282.7*(1-frac)).toFixed(2));
+    E.eMoney.textContent = money0(gross);
+    E.ePct.textContent = (frac*100).toFixed(1)+"%";
+
+    /* F — combined */
+    E.fMoney.textContent = money(net);
+    E.fMoney.style.color = net<0 ? "var(--coral)" : "var(--ink)";
+    E.fWorked.textContent = hms(el);
+    E.fBar.style.width = (frac*100).toFixed(2)+"%";
+    E.fCount.textContent = !workday() ? "—" : (toEnd<=0 ? "已收工" : (ms/60000<S.startMin ? "未開工" : hms(toEnd)));
+    if (liveSpent<=0){ E.fDebt.textContent="今日冇支出"; E.fDebt.className="small"; }
+    else if (owe<=0){ E.fDebt.textContent="用咗 "+money0(liveSpent)+"，已賺返"; E.fDebt.className="small paid"; }
+    else { E.fDebt.textContent="欠 "+money0(owe)+"，仲要 "+ms_(owe/r); E.fDebt.className="small warn"; }
+  }
+
+  var last=performance.now();
+  function frame(now){
+    var dt=now-last; last=now;
+    if (S.speed>0) S.simMs=(S.simMs+dt*S.speed)%86400000;
+    render();
+    requestAnimationFrame(frame);
+  }
+  setMode(true);
+  requestAnimationFrame(frame);
+})();
+</script>

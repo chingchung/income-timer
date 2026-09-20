@@ -222,8 +222,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <h1>Income Timer</h1>
     <span class="pill dark">原型</span>
     <span class="pill">示範數據</span>
+    <span class="pill dark"><a href="widgets.html" style="color:inherit">Widget 組合實驗室 →</a></span>
   </div>
-  <p class="lede">試玩三件事：數字滾動的手感、即時扣數的感覺，以及 widget 每分鐘才更新一次是否仍然吸引。</p>
+  <p class="lede">試玩三件事：數字滾動的手感、即時扣數的感覺，以及 widget 每 5 分鐘才跳一次是否仍然吸引。</p>
 
   <div class="stage">
 
@@ -367,9 +368,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
         <h3>更新速度對比</h3>
         <div class="cmp">
           <div class="cmpc">
-            <div class="hd"><b>主畫面 Widget</b><span class="tagx" id="pillW">每 60 秒</span></div>
+            <div class="hd"><b>主畫面 Widget</b><span class="tagx" id="pillW">每 5 分鐘</span></div>
             <div class="cmpv"><span id="cmpW">—</span><i class="beat" id="beatW"></i></div>
-            <p>iOS 只播放預先算好的畫面，數字每分鐘跳一次。</p>
+            <p>iOS 只播放預先算好的畫面。Apple 要求時間軸每格至少相距 5 分鐘。</p>
           </div>
           <div class="cmpc">
             <div class="hd"><b>App 內</b><span class="tagx">每一幀</span></div>
@@ -386,7 +387,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <div class="checks">
     <div class="chk"><i>01</i><b>手感夠不夠活</b><span>用 15k 與 200k 各試一次，看低薪時數字會不會顯得靜止。</span></div>
     <div class="chk"><i>02</i><b>扣數那一下</b><span>按任何金額，看數字跌下去，再讀「＝ 幾多分鐘人生」。</span></div>
-    <div class="chk"><i>03</i><b>Widget 夠不夠吸引</b><span>調到九點前，用 60× 看 widget 每分鐘跳一次的節奏。</span></div>
+    <div class="chk"><i>03</i><b>Widget 夠不夠吸引</b><span>調到九點前，用 60× 看 widget 每 5 分鐘跳一次的節奏。</span></div>
   </div>
 
   <div class="foot">
@@ -640,10 +641,11 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     var gross = grossAt(ms), spent = spentAt(ms);
     var net = state.netMode ? gross - spent : gross;
 
-    var minuteMs = Math.floor(ms/60000) * 60000;
+    var stepMs = 5*60000;                 // Apple: timeline entries >= ~5 min apart
+    var minuteMs = Math.floor(ms/stepMs) * stepMs;
     var wG = grossAt(minuteMs), wS = spentAt(minuteMs);
     var wNet = state.netMode ? wG - wS : wG;
-    var cm = Math.floor(ms/60000);
+    var cm = Math.floor(ms/stepMs);
     if (cm !== lastMinute){ lastMinute = cm; beatUntil = now + 280; }
 
     appOdo.set(net); wSmOdo.set(wNet); wMdOdo.set(wNet);
@@ -692,7 +694,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     E.cmpW.textContent = money(wNet);
     E.cmpA.textContent = money(net);
     E.beatW.className = "beat" + (now < beatUntil ? " on" : "");
-    E.pillW.textContent = "每 60 秒跳 " + money(rate*60);
+    E.pillW.textContent = "每 5 分鐘跳 " + money(rate*300);
   }
 
   var last = performance.now();
