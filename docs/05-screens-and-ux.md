@@ -88,5 +88,23 @@ time-only for the privacy-conscious. Subtle branding and a short URL.
 
 - The odometer needs a static, readable fallback for reduced-motion users.
 - Dynamic type must not break the digits; test at the largest sizes.
-- Dark mode is the primary design target for this app, not an afterthought.
+- Light mode is the primary design target. Dark mode still has to be designed, not inverted.
 - Haptics on expense save, tuned to feel like a small loss rather than a reward.
+
+## Visual direction
+
+Settled from a reference Kenny supplied, and carried in the prototype.
+
+A pale blue-teal ground with white cards, generous corner radii and almost no
+shadow. One brand green, used for accent surfaces rather than for the numbers.
+A near-black navy for every headline figure and for the active state of any
+control. A single coral, reserved strictly for money leaving: expense amounts,
+the negative odometer, the break-even warning. Nothing else may use coral, so
+that the colour keeps meaning one thing.
+
+Type is one geometric sans for Latin and figures, one Hong Kong sans for
+Chinese, and nothing else. Numbers are heavy and tight-tracked; everything
+around them is light and quiet. The restraint is the point: the only thing on
+screen that should pull the eye is the number.
+
+Light mode is primary. The dark theme is a later, separate design pass.
