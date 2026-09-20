@@ -1,0 +1,469 @@
+<title>Ring Time Money</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+HK:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sky:#bedde1; --card:#fff; --mint:#c9efd6; --mint-mid:#8fdcab;
+  --green:#57bc7c; --green-deep:#3f9d62;
+  --ink:#14252c; --ink-soft:#3d555e; --muted:#6f8990; --faint:#9db4ba;
+  --coral:#fc6a55; --coral-soft:#ffe4df; --line:#e6eff0;
+  --ui:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  --han:"Noto Sans HK","PingFang HK","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--sky)}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--han);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.bench{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+
+.mast{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mast h1{font-family:var(--ui);font-weight:800;font-size:clamp(23px,3.8vw,32px);
+  letter-spacing:-.025em;margin:0;line-height:1.1;flex:1;min-width:210px}
+.pill{background:var(--card);border-radius:999px;padding:7px 15px;font-size:12px;color:var(--muted);white-space:nowrap}
+.pill.dark{background:var(--ink);color:#fff}
+.pill a{color:inherit;text-decoration:none}
+.lede{margin:0 0 24px;color:var(--ink-soft);max-width:56ch}
+
+/* controls */
+.ctrl{background:var(--card);border-radius:26px;padding:20px;margin-bottom:12px}
+.ctop{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.clock{font-family:var(--ui);font-weight:800;font-size:29px;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.daytag{background:var(--mint);color:var(--green-deep);border-radius:999px;font-size:11.5px;padding:4px 12px}
+.spacer{flex:1}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:11px;color:var(--muted)}
+.f input{background:#f2f8f8;border:0;border-radius:12px;padding:10px 13px;width:130px;
+  font-family:var(--ui);font-weight:700;font-size:15px;color:var(--ink)}
+.f input:focus{outline:2px solid var(--green)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);margin-top:-6px}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);border:0}
+.ticks{display:flex;justify-content:space-between;font-family:var(--ui);font-size:10.5px;
+  font-weight:600;color:var(--faint);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips + .chips{margin-top:10px}
+.chip{background:#f2f8f8;border:0;border-radius:999px;cursor:pointer;color:var(--ink-soft);
+  font-family:var(--ui);font-size:12px;font-weight:600;padding:7px 14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip.spend{background:var(--coral-soft);color:#c93f2c}
+.chip.spend:active{background:var(--coral);color:#fff}
+.chip:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.sep{width:1px;height:22px;background:var(--line);margin-inline:6px}
+.clab{font-size:11px;color:var(--muted);margin-right:2px}
+
+.truth{background:var(--ink);color:#fff;border-radius:26px;padding:18px 20px;margin-bottom:22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.truth .t{flex:1;min-width:230px}
+.truth b{display:block;font-size:14px;margin-bottom:2px}
+.truth span{font-size:12px;color:#9fbcc2;line-height:1.5}
+.sw{display:flex;background:#24373f;border-radius:999px;padding:4px;gap:4px}
+.sw button{background:none;border:0;border-radius:999px;cursor:pointer;color:#9fbcc2;
+  font-family:var(--han);font-size:12.5px;font-weight:500;padding:9px 16px;white-space:nowrap}
+.sw button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700}
+.sw button:focus-visible{outline:2px solid var(--mint-mid);outline-offset:2px}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media (max-width:840px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.slot{display:flex;flex-direction:column;gap:9px}
+.slot.wide{grid-column:1/-1}
+.slothead{display:flex;align-items:baseline;gap:8px}
+.slothead i{font-style:normal;font-family:var(--ui);font-weight:800;font-size:11px;
+  color:var(--green-deep);background:var(--mint);border-radius:999px;padding:2px 9px}
+.slothead b{font-size:13.5px}
+.wall{background:linear-gradient(165deg,#d6edf0,#e6f5ee 60%,#f0faf3);border-radius:24px;
+  padding:20px;display:flex;justify-content:center}
+.note{font-size:11.5px;color:var(--muted);line-height:1.55}
+.note b{color:var(--ink);font-weight:700}
+
+/* widget shell */
+.w{background:#fff;border-radius:22px;box-shadow:0 4px 14px rgba(20,37,44,.1);
+  width:172px;height:172px;padding:15px;display:flex;flex-direction:column;
+  overflow:hidden;position:relative}
+.w.md{width:100%;max-width:372px;height:172px}
+.lab{font-size:9.5px;color:var(--muted);display:flex;align-items:center;gap:5px;line-height:1.3;
+  position:relative;z-index:2}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex:none}
+.dot.off{background:var(--faint)}
+.num{font-family:var(--ui);font-weight:800;letter-spacing:-.035em;line-height:1;
+  font-variant-numeric:tabular-nums}
+.sub{font-family:var(--ui);font-size:10.5px;font-weight:600;color:var(--faint);
+  font-variant-numeric:tabular-nums;position:relative;z-index:2}
+.sub.warn{color:var(--coral)}
+.neg{color:var(--coral)}
+
+/* A: ring holds the money */
+.ringbox{position:relative;display:flex;justify-content:center;align-items:center;margin-top:auto}
+.ringbox .inner{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px}
+.ringbox .inner .num{font-size:19px}
+.ringbox .inner .sub{font-size:9px;margin-top:1px}
+
+/* B: money on top, bar pinned bottom */
+.stack{display:flex;flex-direction:column;height:100%}
+.stack .num{font-size:28px;margin-top:auto}
+.barwrap{margin-top:11px}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.barcap{display:flex;justify-content:space-between;font-family:var(--ui);font-size:8.5px;
+  font-weight:600;color:var(--faint);margin-top:5px}
+
+/* D: semicircle gauge */
+.gauge{position:relative;margin-top:auto;display:flex;justify-content:center}
+.gauge .inner{position:absolute;left:0;right:0;bottom:2px;display:flex;flex-direction:column;
+  align-items:center;gap:1px}
+.gauge .inner .num{font-size:21px}
+
+/* E: oversized ring bleeding off the edge */
+.bleed{position:absolute;right:-46px;top:-30px;opacity:.9;pointer-events:none}
+.eleft{position:relative;z-index:2;margin-top:auto}
+.eleft .num{font-size:26px}
+
+/* F: three columns */
+.cols{display:flex;gap:16px;height:100%;align-items:stretch}
+.cols .c{flex:1;display:flex;flex-direction:column;min-width:0;justify-content:space-between}
+.cols .c + .c{border-left:1px solid var(--line);padding-left:16px}
+.cols .num{font-size:23px;margin-top:auto}
+
+.foot{margin-top:34px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;
+  gap:14px;flex-wrap:wrap}
+.foot span:last-child{font-family:var(--ui);font-weight:600;color:var(--faint)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+
+<div class="bench">
+
+  <div class="mast">
+    <h1>環 · 時間 · 金額</h1>
+    <span class="pill dark"><a href="widgets.html">← 六方案</a></span>
+    <span class="pill"><a href="./">主原型</a></span>
+  </div>
+  <p class="lede">六種排法，每一個都同時有進度環、會跳的時間、以及金額。分別只在於誰做主角、環放在哪裡。時間顯示的意思可以在下面切換，六格會一齊變，方便比較。</p>
+
+  <div class="ctrl">
+    <div class="ctop">
+      <span class="clock" id="clk">09:05:00</span>
+      <span class="daytag" id="day">星期三・工作日</span>
+      <span class="spacer"></span>
+      <div class="f"><label for="sal">月薪</label>
+        <input id="sal" type="number" value="50000" min="0" step="1000" inputmode="numeric"></div>
+    </div>
+    <input type="range" id="tl" min="0" max="1439" value="545" step="1" aria-label="一日之中的時間">
+    <div class="ticks"><span>00:00</span><span>09:00</span><span>18:00</span><span>23:59</span></div>
+    <div class="chips">
+      <span class="clab">速度</span>
+      <button class="chip" data-sp="0">暫停</button>
+      <button class="chip" data-sp="1" aria-pressed="true">1×</button>
+      <button class="chip" data-sp="10">10×</button>
+      <button class="chip" data-sp="60">60×</button>
+      <button class="chip" data-sp="300">300×</button>
+      <span class="sep"></span>
+      <span class="clab">記一筆</span>
+      <button class="chip spend" data-qa="42">＋$42</button>
+      <button class="chip spend" data-qa="68">＋$68</button>
+      <button class="chip spend" data-qa="160">＋$160</button>
+      <button class="chip" id="clr">清空</button>
+    </div>
+    <div class="chips">
+      <span class="clab">時間顯示</span>
+      <button class="chip" data-tm="left" aria-pressed="true">距離收工</button>
+      <button class="chip" data-tm="worked">已返工</button>
+      <button class="chip" data-tm="debt">賺返支出</button>
+    </div>
+  </div>
+
+  <div class="truth">
+    <div class="t">
+      <b>模擬 iOS 的真實限制</b>
+      <span id="truthNote">金額每 5 分鐘跳一格，時間逐秒跳，環連續但極慢。</span>
+    </div>
+    <div class="sw" role="group" aria-label="更新模式">
+      <button id="mReal" aria-pressed="true">真實限制</button>
+      <button id="mFake" aria-pressed="false">假設冇限制</button>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- A -->
+    <div class="slot">
+      <div class="slothead"><i>A</i><b>環抱金額</b></div>
+      <div class="wall"><div class="w">
+        <div class="lab"><span class="dot dt"></span>今日淨收</div>
+        <div class="ringbox">
+          <svg width="116" height="116" viewBox="0 0 116 116" aria-hidden="true">
+            <circle cx="58" cy="58" r="50" fill="none" stroke="#e6eff0" stroke-width="8"></circle>
+            <circle class="ring" cx="58" cy="58" r="50" fill="none" stroke="#57bc7c" stroke-width="8"
+              stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+              transform="rotate(-90 58 58)"></circle>
+          </svg>
+          <div class="inner">
+            <span class="num money"></span>
+            <span class="sub time"></span>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">金額做主角，時間縮在下面。最平衡，但環內空間細，金額一過四位數就逼。</p>
+    </div>
+
+    <!-- B -->
+    <div class="slot">
+      <div class="slothead"><i>B</i><b>金額在上，環化成底線</b></div>
+      <div class="wall"><div class="w">
+        <div class="stack">
+          <div class="lab"><span class="dot dt"></span>今日淨收</div>
+          <div class="num money"></div>
+          <div class="sub time" style="margin-top:6px"></div>
+          <div class="barwrap">
+            <div class="bar"><i class="barfill"></i></div>
+            <div class="barcap"><span>09:00</span><span class="pct"></span><span>18:00</span></div>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">環變成一條線，資訊密度最高而且最易讀。<b>最貼近 reference 的簡約感</b>。</p>
+    </div>
+
+    <!-- C -->
+    <div class="slot">
+      <div class="slothead"><i>C</i><b>環抱時間</b></div>
+      <div class="wall"><div class="w">
+        <div class="lab"><span class="dot dt"></span><span class="tlab"></span></div>
+        <div class="ringbox">
+          <svg width="116" height="116" viewBox="0 0 116 116" aria-hidden="true">
+            <circle cx="58" cy="58" r="50" fill="none" stroke="#e6eff0" stroke-width="8"></circle>
+            <circle class="ring" cx="58" cy="58" r="50" fill="none" stroke="#57bc7c" stroke-width="8"
+              stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
+              transform="rotate(-90 58 58)"></circle>
+          </svg>
+          <div class="inner">
+            <span class="num time" style="font-size:17px"></span>
+            <span class="sub money"></span>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">時間做主角，所以中間那個數字<b>每秒都在跳</b>。環同時在走，兩者意思一致，看起來最像一個真的儀錶。</p>
+    </div>
+
+    <!-- D -->
+    <div class="slot">
+      <div class="slothead"><i>D</i><b>半圓儀錶</b></div>
+      <div class="wall"><div class="w">
+        <div class="lab"><span class="dot dt"></span>今日淨收</div>
+        <div class="gauge">
+          <svg width="142" height="78" viewBox="0 0 142 78" aria-hidden="true">
+            <path d="M 11 71 A 60 60 0 0 1 131 71" fill="none" stroke="#e6eff0"
+              stroke-width="9" stroke-linecap="round"></path>
+            <path class="ring" d="M 11 71 A 60 60 0 0 1 131 71" fill="none" stroke="#57bc7c"
+              stroke-width="9" stroke-linecap="round"
+              stroke-dasharray="188.5" stroke-dashoffset="188.5"></path>
+          </svg>
+          <div class="inner">
+            <span class="num money"></span>
+            <span class="sub time"></span>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">半圓騰出更多橫向空間給金額，四位數也放得下。代價是圖形比較「儀錶板」，不夠乾淨。</p>
+    </div>
+
+    <!-- E -->
+    <div class="slot">
+      <div class="slothead"><i>E</i><b>環做背景</b></div>
+      <div class="wall"><div class="w">
+        <svg class="bleed" width="152" height="152" viewBox="0 0 152 152" aria-hidden="true">
+          <circle cx="76" cy="76" r="64" fill="none" stroke="#eef6f3" stroke-width="18"></circle>
+          <circle class="ring" cx="76" cy="76" r="64" fill="none" stroke="#c9efd6" stroke-width="18"
+            stroke-linecap="round" stroke-dasharray="402.12" stroke-dashoffset="402.12"
+            transform="rotate(-90 76 76)"></circle>
+        </svg>
+        <div class="lab"><span class="dot dt"></span>今日淨收</div>
+        <div class="eleft">
+          <div class="num money"></div>
+          <div class="sub time" style="margin-top:6px"></div>
+        </div>
+      </div></div>
+      <p class="note">環退成裝飾，金額左對齊。視覺最有個性，但環大到一個程度反而更看不出它在動。</p>
+    </div>
+
+    <!-- F -->
+    <div class="slot wide">
+      <div class="slothead"><i>F</i><b>三欄並列（中尺寸）</b></div>
+      <div class="wall"><div class="w md">
+        <div class="cols">
+          <div class="c">
+            <div class="lab"><span class="dot dt"></span>今日淨收</div>
+            <div class="num money" style="font-size:30px"></div>
+            <div class="sub">已賺 <span class="gross"></span></div>
+          </div>
+          <div class="c">
+            <div class="lab"><span class="tlab"></span></div>
+            <div class="num time"></div>
+            <div class="sub debt"></div>
+          </div>
+          <div class="c" style="align-items:center;justify-content:center;flex:0 0 96px">
+            <div class="ringbox" style="margin:0">
+              <svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
+                <circle cx="46" cy="46" r="39" fill="none" stroke="#e6eff0" stroke-width="7"></circle>
+                <circle class="ring" cx="46" cy="46" r="39" fill="none" stroke="#57bc7c" stroke-width="7"
+                  stroke-linecap="round" stroke-dasharray="245.04" stroke-dashoffset="245.04"
+                  transform="rotate(-90 46 46)"></circle>
+              </svg>
+              <div class="inner"><span class="sub pct" style="font-size:12px;color:var(--ink)"></span></div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <p class="note">三樣東西各佔一欄，誰都不用讓位。中尺寸才有這個餘裕，代價是佔主畫面兩格。</p>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>示範數據，並非真實收支。環代表今日工作進度，金額節奏依 Apple 對時間軸每格至少相距約 5 分鐘的規定模擬。</span>
+    <span id="rateOut">—</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STEP = 5*60000;
+  var S = { salary:50000, startMin:540, endMin:1080, speed:1,
+            simMs:(9*60+5)*60000, dow:3, honest:true, tmode:"left",
+            expenses:[{min:495, amt:42}] };
+
+  function paidSec(){ return (S.endMin - S.startMin)*60; }
+  function workDays(){
+    var n=new Date(), y=n.getFullYear(), m=n.getMonth();
+    var dim=new Date(y,m+1,0).getDate(), c=0;
+    for (var d=1; d<=dim; d++){ var w=new Date(y,m,d).getDay(); if (w>=1&&w<=5) c++; }
+    return c;
+  }
+  function rate(){ return S.salary/(workDays()*paidSec()); }
+  function workday(){ return S.dow>=1 && S.dow<=5; }
+  function elapsed(ms){
+    if (!workday()) return 0;
+    return Math.min(Math.max((ms/60000 - S.startMin)*60, 0), paidSec());
+  }
+  function grossAt(ms){ return elapsed(ms)*rate(); }
+  function spentAt(ms){
+    var mi=ms/60000, t=0;
+    for (var i=0;i<S.expenses.length;i++) if (S.expenses[i].min<=mi) t+=S.expenses[i].amt;
+    return t;
+  }
+  function moneyMs(ms){ return S.honest ? Math.floor(ms/STEP)*STEP : ms; }
+
+  function pad(n){ return (n<10?"0":"")+n; }
+  function hms(s){ s=Math.max(0,Math.floor(s));
+    return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60); }
+  function ms_(s){ s=Math.max(0,Math.floor(s)); return pad(Math.floor(s/60))+":"+pad(s%60); }
+  function money(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money0(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+  var DOW=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+
+  var TLAB={left:"距離收工", worked:"已返工", debt:"賺返支出仲要"};
+
+  function all(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function on(id,ev,fn){ document.getElementById(id).addEventListener(ev,fn); }
+  var tl=document.getElementById("tl");
+  on("sal","input",function(e){ S.salary=parseFloat(e.target.value)||0; });
+  on("tl","input",function(e){ S.speed=0; setChip("data-sp","0"); S.simMs=(+e.target.value)*60000; });
+  on("clr","click",function(){ S.expenses=[]; });
+
+  function setChip(attr,val){
+    all("["+attr+"]").forEach(function(c){
+      c.setAttribute("aria-pressed", c.getAttribute(attr)===val ? "true":"false");
+    });
+  }
+  document.addEventListener("click",function(ev){
+    var sp=ev.target.closest("[data-sp]");
+    if (sp){ S.speed=+sp.getAttribute("data-sp"); setChip("data-sp",sp.getAttribute("data-sp")); return; }
+    var tm=ev.target.closest("[data-tm]");
+    if (tm){ S.tmode=tm.getAttribute("data-tm"); setChip("data-tm",S.tmode); return; }
+    var qa=ev.target.closest("[data-qa]");
+    if (qa){ S.expenses.push({min:S.simMs/60000, amt:parseFloat(qa.getAttribute("data-qa"))}); }
+  });
+
+  function setMode(h){
+    S.honest=h;
+    document.getElementById("mReal").setAttribute("aria-pressed", h?"true":"false");
+    document.getElementById("mFake").setAttribute("aria-pressed", h?"false":"true");
+    document.getElementById("truthNote").textContent = h
+      ? "金額每 5 分鐘跳一格，時間逐秒跳，環連續但極慢。"
+      : "金額逐秒滾動。iOS 做不到，這一格只是給你比較用。";
+  }
+  document.getElementById("mReal").addEventListener("click",function(){ setMode(true); });
+  document.getElementById("mFake").addEventListener("click",function(){ setMode(false); });
+
+  var elClk=document.getElementById("clk"), elDay=document.getElementById("day"),
+      elRate=document.getElementById("rateOut");
+
+  function render(){
+    var r=rate(), ms=S.simMs, mms=moneyMs(ms);
+    var gross=grossAt(mms), spent=spentAt(mms), net=gross-spent;
+    var lg=grossAt(ms), lsp=spentAt(ms), owe=lsp-lg;
+    var el=elapsed(ms), frac=el/paidSec();
+    var working = workday() && ms/60000>=S.startMin && ms/60000<S.endMin;
+    var beforeWork = ms/60000 < S.startMin;
+
+    elClk.textContent=hms(ms/1000);
+    elDay.textContent=DOW[S.dow]+(workday()?"・工作日":"・唔使返工");
+    if (!tl.matches(":active")) tl.value=Math.floor(ms/60000);
+    elRate.textContent="每秒 $"+r.toFixed(4)+"　每 5 分鐘 "+money(r*300);
+
+    // the shared time figure
+    var tTxt, tWarn=false;
+    if (!workday()) tTxt="—";
+    else if (S.tmode==="left")
+      tTxt = beforeWork ? "未開工" : (el>=paidSec() ? "已收工" : hms(S.endMin*60 - ms/1000));
+    else if (S.tmode==="worked") tTxt = hms(el);
+    else {
+      if (lsp<=0) tTxt="冇支出";
+      else if (owe<=0) tTxt="已賺返";
+      else { tTxt=ms_(owe/r); tWarn=true; }
+    }
+
+    all(".tlab").forEach(function(e){ e.textContent=TLAB[S.tmode]; });
+    all(".money").forEach(function(e){
+      e.textContent = e.classList.contains("num") ? money(net) : money0(net);
+      e.classList.toggle("neg", net<0);
+    });
+    all(".time").forEach(function(e){
+      e.textContent=tTxt;
+      e.classList.toggle("warn", tWarn && !e.classList.contains("num"));
+      if (e.classList.contains("num")) e.style.color = tWarn ? "var(--coral)" : "var(--ink)";
+    });
+    all(".gross").forEach(function(e){ e.textContent=money0(gross); });
+    all(".debt").forEach(function(e){
+      if (lsp<=0){ e.textContent="今日冇支出"; e.classList.remove("warn"); }
+      else if (owe<=0){ e.textContent="用咗 "+money0(lsp)+"，已賺返"; e.classList.remove("warn"); }
+      else { e.textContent="欠 "+money0(owe); e.classList.add("warn"); }
+    });
+    all(".pct").forEach(function(e){ e.textContent=(frac*100).toFixed(1)+"%"; });
+    all(".barfill").forEach(function(e){ e.style.width=(frac*100).toFixed(2)+"%"; });
+    all(".dt").forEach(function(e){ e.className="dot dt"+(working?"":" off"); });
+
+    all(".ring").forEach(function(e){
+      var len=parseFloat(e.getAttribute("stroke-dasharray"));
+      e.setAttribute("stroke-dashoffset",(len*(1-frac)).toFixed(2));
+    });
+  }
+
+  var last=performance.now();
+  function frame(now){
+    var dt=now-last; last=now;
+    if (S.speed>0) S.simMs=(S.simMs+dt*S.speed)%86400000;
+    render();
+    requestAnimationFrame(frame);
+  }
+  setMode(true);
+  requestAnimationFrame(frame);
+})();
+</script>

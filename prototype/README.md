@@ -4,6 +4,8 @@ Live: **https://chingchung.github.io/income-timer/prototype/**
 
 Widget combinations lab: **https://chingchung.github.io/income-timer/prototype/widgets.html**
 
+Ring + time + money layouts: **https://chingchung.github.io/income-timer/prototype/trio.html**
+
 `index.html` — a single self-contained file. Open it in any browser, or view
 the published version. No build step, no dependencies beyond web fonts.
 
