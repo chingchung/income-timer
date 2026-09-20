@@ -25,6 +25,13 @@ earn, one second at a time.
 The second lever: **every expense is also priced in minutes of your life.**
 A $40 coffee is not "$40". It is "9 minutes 30 seconds of sitting at your desk."
 
+## Try it
+
+**https://chingchung.github.io/income-timer/prototype/**
+
+An interactive prototype of the widget and the in-app view, with a time
+simulator so the workday can be tested at any hour. No install, no build step.
+
 ## Docs
 
 | Doc | What's in it |

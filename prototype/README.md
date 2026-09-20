@@ -1,5 +1,7 @@
 # Prototype
 
+Live: **https://chingchung.github.io/income-timer/prototype/**
+
 `index.html` — a single self-contained file. Open it in any browser, or view
 the published version. No build step, no dependencies beyond web fonts.
 
