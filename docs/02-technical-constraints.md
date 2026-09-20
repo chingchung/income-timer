@@ -97,6 +97,47 @@ preview video, and the reason people open it rather than only glancing at it.
 The widget's job is to be a persistent, honest reminder that pulls you into the
 app. Not to be the show.
 
+## Live Activities are tighter than widgets, not looser
+
+The Lock Screen and Dynamic Island look like the better home for this product,
+and in exposure terms they are. But ActivityKit imposes two limits that widgets
+do not, and both bite here.
+
+**No timeline.** A widget hands the system a set of future entries and the
+system plays them. A Live Activity has no such mechanism. Its content changes
+only when the app calls an update while running, or when a push notification
+arrives. A Live Activity also cannot reach the network from inside its own
+sandbox. So the money figure sits frozen at whatever it was when the app was
+last open. The self-updating time text and the timer-driven progress bar still
+run for free, because the system renders those itself, but the amount does not
+move on its own at all.
+
+The options for keeping the figure fresh are to update it whenever the person
+opens the app or logs an expense, which is free and covers the moments that
+matter most, or to push updates from a server, which contradicts the no-backend
+position in the data model and adds real cost. Start with the first. Show the
+figure with the time it was taken, so it is never silently wrong.
+
+**Eight hours, and the clock starts when the activity does.** Apple caps a Live
+Activity at eight active hours. The system then ends it and removes it from the
+Dynamic Island immediately, leaving a frozen copy on the Lock Screen for up to
+four more hours.
+
+A 9-to-6 day is nine hours. Started at 09:00, the activity dies at 17:00 and the
+last hour of the working day, which is the hour people most want to watch, has
+nothing. Options, none of them clean:
+
+- Start it later, around 10:00, and give up the first hour instead of the last.
+  The last hour is worth more, so this is the better trade.
+- Restart it at 17:00, which needs the app to be running or a push-to-start from
+  a server.
+- Offer it as a thing the person starts themselves when they want it, rather
+  than automatically every morning. This turns the limit into a feature and is
+  probably the honest answer for v1.
+
+Static and dynamic data together cannot exceed 4KB, which is not a constraint
+for this product.
+
 ## Tap-through interactivity
 
 Widgets on iOS 17 and later can contain real interactive buttons that run a small
