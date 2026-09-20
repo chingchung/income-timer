@@ -1,0 +1,390 @@
+<title>Weight and Tint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+HK:wght@400;500;700&display=swap">
+<style>
+:root{
+  --sky:#bedde1; --card:#fff; --mint:#c9efd6; --mint-mid:#8fdcab;
+  --green:#57bc7c; --green-deep:#3f9d62;
+  --ink:#14252c; --ink-soft:#3d555e; --muted:#6f8990; --faint:#9db4ba;
+  --coral:#fc6a55; --coral-soft:#ffe4df; --line:#e6eff0;
+  --tint:#ffb340;
+  --ui:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  --han:"Noto Sans HK","PingFang HK","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--sky)}
+body{margin:0;background:var(--sky);color:var(--ink);font-family:var(--han);
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.bench{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:40px 80px}
+
+.mast{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mast h1{font-family:var(--ui);font-weight:800;font-size:clamp(23px,3.8vw,32px);
+  letter-spacing:-.025em;margin:0;line-height:1.1;flex:1;min-width:210px}
+.pill{background:var(--card);border-radius:999px;padding:7px 15px;font-size:12px;color:var(--muted);white-space:nowrap}
+.pill.dark{background:var(--ink);color:#fff}
+.pill a{color:inherit;text-decoration:none}
+.lede{margin:0 0 24px;color:var(--ink-soft);max-width:58ch}
+
+.ctrl{background:var(--card);border-radius:26px;padding:20px;margin-bottom:12px}
+.ctop{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.clock{font-family:var(--ui);font-weight:800;font-size:29px;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.daytag{background:var(--mint);color:var(--green-deep);border-radius:999px;font-size:11.5px;padding:4px 12px}
+.spacer{flex:1}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:11px;color:var(--muted)}
+.f input{background:#f2f8f8;border:0;border-radius:12px;padding:10px 13px;width:130px;
+  font-family:var(--ui);font-weight:700;font-size:15px;color:var(--ink)}
+.f input:focus{outline:2px solid var(--green)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:none;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;
+  background:linear-gradient(90deg,#e6eff0 0 37.5%,var(--mint-mid) 37.5% 75%,#e6eff0 75%)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--ink);margin-top:-6px}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--ink);border:0}
+.ticks{display:flex;justify-content:space-between;font-family:var(--ui);font-size:10.5px;
+  font-weight:600;color:var(--faint);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips + .chips{margin-top:10px}
+.chip{background:#f2f8f8;border:0;border-radius:999px;cursor:pointer;color:var(--ink-soft);
+  font-family:var(--ui);font-size:12px;font-weight:600;padding:7px 14px}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.chip.spend{background:var(--coral-soft);color:#c93f2c}
+.chip.spend:active{background:var(--coral);color:#fff}
+.chip:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.sep{width:1px;height:22px;background:var(--line);margin-inline:6px}
+.clab{font-size:11px;color:var(--muted);margin-right:2px}
+
+.modes{background:var(--ink);color:#fff;border-radius:26px;padding:18px 20px;margin-bottom:22px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.modes .t{flex:1;min-width:250px}
+.modes b{display:block;font-size:14px;margin-bottom:2px}
+.modes span{font-size:12px;color:#9fbcc2;line-height:1.5}
+.sw{display:flex;background:#24373f;border-radius:999px;padding:4px;gap:4px;flex-wrap:wrap}
+.sw button{background:none;border:0;border-radius:999px;cursor:pointer;color:#9fbcc2;
+  font-family:var(--han);font-size:12.5px;font-weight:500;padding:9px 15px;white-space:nowrap}
+.sw button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700}
+.sw button:focus-visible{outline:2px solid var(--mint-mid);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+.slot{display:flex;flex-direction:column;gap:9px}
+.slothead{display:flex;align-items:baseline;gap:8px}
+.slothead i{font-style:normal;font-family:var(--ui);font-weight:800;font-size:11px;
+  color:var(--green-deep);background:var(--mint);border-radius:999px;padding:2px 9px}
+.slothead b{font-size:13px}
+.wall{border-radius:24px;padding:18px;display:flex;justify-content:center;
+  background:linear-gradient(165deg,#d6edf0,#e6f5ee 60%,#f0faf3);transition:background .25s}
+.wall.dim{background:linear-gradient(165deg,#2a3d47,#1b2a33 60%,#141f26)}
+.note{font-size:11.5px;color:var(--muted);line-height:1.55}
+.note b{color:var(--ink);font-weight:700}
+
+/* ---- widget: layout B, four weights ---- */
+.w{width:168px;height:168px;padding:15px;border-radius:22px;display:flex;flex-direction:column;
+  background:#fff;box-shadow:0 4px 14px rgba(20,37,44,.1);overflow:hidden;transition:background .25s}
+.lab{font-size:9.5px;color:var(--muted);display:flex;align-items:center;gap:5px;line-height:1.3;
+  justify-content:space-between}
+.lab .r{font-family:var(--ui);font-weight:700;font-size:10px;color:var(--ink);font-variant-numeric:tabular-nums}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex:none}
+.dot.off{background:var(--faint)}
+.body{margin-top:auto;display:flex;flex-direction:column}
+.num{font-family:var(--ui);font-weight:800;letter-spacing:-.035em;line-height:1.02;
+  font-variant-numeric:tabular-nums}
+.sub{font-family:var(--ui);font-weight:600;color:var(--faint);font-variant-numeric:tabular-nums}
+.neg{color:var(--coral)}
+.barwrap{margin-top:11px}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.barcap{display:flex;justify-content:space-between;font-family:var(--ui);font-size:8.5px;
+  font-weight:600;color:var(--faint);margin-top:5px}
+
+/* weight steps */
+.w1 .money{font-size:27px}          .w1 .time{font-size:11px;margin-top:6px}
+.w2 .money{font-size:20px}          .w2 .time{font-size:20px;margin-top:4px}
+.w3 .money{font-size:13px;margin-top:5px;order:2} .w3 .time{font-size:26px;order:1}
+.w4 .money{font-size:12px;margin-top:5px;order:2} .w4 .time{font-size:33px;order:1;letter-spacing:-.05em}
+
+/* ---- rendering modes ---- */
+.w.accented{background:rgba(18,30,36,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.w.accented .lab{color:rgba(255,255,255,.62)}
+.w.accented .lab .r{color:rgba(255,255,255,.82)}
+.w.accented .sub{color:rgba(255,255,255,.6)}
+.w.accented .num{color:rgba(255,255,255,.88)}
+.w.accented .acc{color:var(--tint)}
+.w.accented .neg{color:rgba(255,255,255,.88)}
+.w.accented .dot{background:var(--tint)}
+.w.accented .dot.off{background:rgba(255,255,255,.35)}
+.w.accented .bar{background:rgba(255,255,255,.22)}
+.w.accented .bar i{background:var(--tint)}
+.w.accented .barcap{color:rgba(255,255,255,.5)}
+
+.w.vibrant{background:rgba(255,255,255,.13);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:none}
+.w.vibrant .lab{color:rgba(255,255,255,.58)}
+.w.vibrant .lab .r,.w.vibrant .num,.w.vibrant .neg,.w.vibrant .acc{color:#fff}
+.w.vibrant .sub{color:rgba(255,255,255,.62)}
+.w.vibrant .dot{background:#fff}
+.w.vibrant .dot.off{background:rgba(255,255,255,.35)}
+.w.vibrant .bar{background:rgba(255,255,255,.25)}
+.w.vibrant .bar i{background:#fff}
+.w.vibrant .barcap{color:rgba(255,255,255,.5)}
+
+.tints{display:flex;gap:6px;align-items:center}
+.tints button{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.tints button[aria-pressed="true"]{border-color:#fff}
+
+.warnbox{background:var(--coral-soft);border-radius:20px;padding:18px 20px;margin-top:26px;
+  color:#8f2e1c;font-size:12.5px;line-height:1.65}
+.warnbox b{display:block;font-size:13.5px;margin-bottom:5px;color:#7a2717}
+.foot{margin-top:30px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.foot span:last-child{font-family:var(--ui);font-weight:600;color:var(--faint)}
+</style>
+
+<div class="bench">
+
+  <div class="mast">
+    <h1>B 的輕重與染色</h1>
+    <span class="pill dark"><a href="trio.html">← 環·時間·金額</a></span>
+    <span class="pill"><a href="widgets.html">六方案</a></span>
+    <span class="pill"><a href="./">主原型</a></span>
+  </div>
+  <p class="lede">同一個 B 版面，四個輕重比例。計時器想多大都可以，widget 的內容完全由你決定。唯一不由你決定的是下面那個染色開關，那是系統強制的。</p>
+
+  <div class="ctrl">
+    <div class="ctop">
+      <span class="clock" id="clk">09:05:00</span>
+      <span class="daytag" id="day">星期三・工作日</span>
+      <span class="spacer"></span>
+      <div class="f"><label for="sal">月薪</label>
+        <input id="sal" type="number" value="50000" min="0" step="1000" inputmode="numeric"></div>
+    </div>
+    <input type="range" id="tl" min="0" max="1439" value="545" step="1" aria-label="一日之中的時間">
+    <div class="ticks"><span>00:00</span><span>09:00</span><span>18:00</span><span>23:59</span></div>
+    <div class="chips">
+      <span class="clab">速度</span>
+      <button class="chip" data-sp="0">暫停</button>
+      <button class="chip" data-sp="1" aria-pressed="true">1×</button>
+      <button class="chip" data-sp="10">10×</button>
+      <button class="chip" data-sp="60">60×</button>
+      <button class="chip" data-sp="300">300×</button>
+      <span class="sep"></span>
+      <span class="clab">記一筆</span>
+      <button class="chip spend" data-qa="42">＋$42</button>
+      <button class="chip spend" data-qa="68">＋$68</button>
+      <button class="chip" id="clr">清空</button>
+    </div>
+    <div class="chips">
+      <span class="clab">時間顯示</span>
+      <button class="chip" data-tm="left" aria-pressed="true">距離收工</button>
+      <button class="chip" data-tm="worked">已返工</button>
+      <button class="chip" data-tm="debt">賺返支出</button>
+    </div>
+  </div>
+
+  <div class="modes">
+    <div class="t">
+      <b>系統渲染模式</b>
+      <span id="modeNote">全彩。用戶沒有開染色，主畫面顯示你設計的原色。</span>
+    </div>
+    <div class="tints" id="tints" aria-label="染色顏色">
+      <button data-tint="#ffb340" style="background:#ffb340" aria-pressed="true"></button>
+      <button data-tint="#7ad0ff" style="background:#7ad0ff" aria-pressed="false"></button>
+      <button data-tint="#ff8fb3" style="background:#ff8fb3" aria-pressed="false"></button>
+      <button data-tint="#b7f0c4" style="background:#b7f0c4" aria-pressed="false"></button>
+    </div>
+    <div class="sw" role="group" aria-label="渲染模式">
+      <button data-rm="full" aria-pressed="true">全彩</button>
+      <button data-rm="accented" aria-pressed="false">主畫面染色</button>
+      <button data-rm="vibrant" aria-pressed="false">鎖定畫面</button>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+
+    <div class="slot">
+      <div class="slothead"><i>B1</i><b>金額主導</b></div>
+      <div class="wall"><div class="w w1">
+        <div class="lab"><span><span class="dot dt"></span> 今日淨收</span></div>
+        <div class="body">
+          <div class="num money acc"></div>
+          <div class="sub time"></div>
+        </div>
+        <div class="barwrap"><div class="bar"><i class="barfill"></i></div>
+          <div class="barcap"><span>09:00</span><span class="pct"></span><span>18:00</span></div></div>
+      </div></div>
+      <p class="note">現狀。金額最大，但它每 5 分鐘先郁一次。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>B2</i><b>均衡</b></div>
+      <div class="wall"><div class="w w2">
+        <div class="lab"><span><span class="dot dt"></span> 今日淨收</span></div>
+        <div class="body">
+          <div class="num money acc"></div>
+          <div class="num time"></div>
+        </div>
+        <div class="barwrap"><div class="bar"><i class="barfill"></i></div>
+          <div class="barcap"><span>09:00</span><span class="pct"></span><span>18:00</span></div></div>
+      </div></div>
+      <p class="note">兩行同樣大。好處是資訊對等，壞處是沒有焦點，眼睛不知道先看哪一行。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>B3</i><b>時間主導</b></div>
+      <div class="wall"><div class="w w3">
+        <div class="lab"><span><span class="dot dt"></span> <span class="tlab"></span></span></div>
+        <div class="body">
+          <div class="num time"></div>
+          <div class="sub money"></div>
+        </div>
+        <div class="barwrap"><div class="bar"><i class="barfill"></i></div>
+          <div class="barcap"><span>09:00</span><span class="pct"></span><span>18:00</span></div></div>
+      </div></div>
+      <p class="note">大字<b>每秒都在跳</b>，金額退到細字。widget 終於有一個真正會動的主角。</p>
+    </div>
+
+    <div class="slot">
+      <div class="slothead"><i>B4</i><b>時間放到最大</b></div>
+      <div class="wall"><div class="w w4">
+        <div class="lab"><span><span class="dot dt"></span> <span class="tlab"></span></span></div>
+        <div class="body">
+          <div class="num time"></div>
+          <div class="sub money"></div>
+        </div>
+        <div class="barwrap"><div class="bar"><i class="barfill"></i></div>
+          <div class="barcap"><span>09:00</span><span class="pct"></span><span>18:00</span></div></div>
+      </div></div>
+      <p class="note">撐到整格闊度。八個字元加冒號已經到頂，再大就要放棄秒數。</p>
+    </div>
+
+  </div>
+
+  <div class="warnbox">
+    <b>染色模式會吃掉你的顏色語言</b>
+    按上面的「主畫面染色」或「鎖定畫面」看看。系統只把畫面分成兩組，一組上色、一組留白，你的珊瑚紅和薄荷綠全部消失。所以「珊瑚紅代表錢離開」這個規則必須有一個不靠顏色的後備：負號、一個「欠」字，或者位置本身。現在四格的負數都保留了負號，就是為了這個。
+  </div>
+
+  <div class="foot">
+    <span>示範數據，並非真實收支。</span>
+    <span id="rateOut">—</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STEP=5*60000;
+  var S={salary:50000,startMin:540,endMin:1080,speed:1,simMs:(9*60+5)*60000,dow:3,
+         tmode:"left",rmode:"full",expenses:[{min:495,amt:42}]};
+
+  function paidSec(){ return (S.endMin-S.startMin)*60; }
+  function workDays(){
+    var n=new Date(),y=n.getFullYear(),m=n.getMonth();
+    var dim=new Date(y,m+1,0).getDate(),c=0;
+    for(var d=1;d<=dim;d++){var w=new Date(y,m,d).getDay(); if(w>=1&&w<=5)c++;}
+    return c;
+  }
+  function rate(){ return S.salary/(workDays()*paidSec()); }
+  function workday(){ return S.dow>=1&&S.dow<=5; }
+  function elapsed(ms){ if(!workday())return 0;
+    return Math.min(Math.max((ms/60000-S.startMin)*60,0),paidSec()); }
+  function grossAt(ms){ return elapsed(ms)*rate(); }
+  function spentAt(ms){ var mi=ms/60000,t=0;
+    for(var i=0;i<S.expenses.length;i++) if(S.expenses[i].min<=mi) t+=S.expenses[i].amt;
+    return t; }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function hms(s){ s=Math.max(0,Math.floor(s));
+    return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60); }
+  function ms_(s){ s=Math.max(0,Math.floor(s)); return pad(Math.floor(s/60))+":"+pad(s%60); }
+  function money(v){ return "$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money0(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+  var DOW=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
+  var TLAB={left:"距離收工",worked:"已返工",debt:"賺返支出仲要"};
+  var RNOTE={
+    full:"全彩。用戶沒有開染色，主畫面顯示你設計的原色。",
+    accented:"主畫面染色。系統只分「上色組」同「預設組」兩組，你的配色被取代。",
+    vibrant:"鎖定畫面。整個 widget 去飽和變單色，只剩明暗。"
+  };
+
+  function all(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+  var tl=document.getElementById("tl");
+  document.getElementById("sal").addEventListener("input",function(e){ S.salary=parseFloat(e.target.value)||0; });
+  tl.addEventListener("input",function(e){ S.speed=0; setChip("data-sp","0"); S.simMs=(+e.target.value)*60000; });
+  document.getElementById("clr").addEventListener("click",function(){ S.expenses=[]; });
+
+  function setChip(attr,val){
+    all("["+attr+"]").forEach(function(c){
+      c.setAttribute("aria-pressed", c.getAttribute(attr)===val?"true":"false"); });
+  }
+  function setRMode(m){
+    S.rmode=m; setChip("data-rm",m);
+    document.getElementById("modeNote").textContent=RNOTE[m];
+    all(".w").forEach(function(w){
+      w.classList.remove("accented","vibrant");
+      if(m!=="full") w.classList.add(m);
+    });
+    all(".wall").forEach(function(x){ x.classList.toggle("dim", m!=="full"); });
+  }
+  document.addEventListener("click",function(ev){
+    var sp=ev.target.closest("[data-sp]");
+    if(sp){ S.speed=+sp.getAttribute("data-sp"); setChip("data-sp",sp.getAttribute("data-sp")); return; }
+    var tm=ev.target.closest("[data-tm]");
+    if(tm){ S.tmode=tm.getAttribute("data-tm"); setChip("data-tm",S.tmode); return; }
+    var rm=ev.target.closest("[data-rm]");
+    if(rm){ setRMode(rm.getAttribute("data-rm")); return; }
+    var tn=ev.target.closest("[data-tint]");
+    if(tn){ document.documentElement.style.setProperty("--tint",tn.getAttribute("data-tint"));
+            setChip("data-tint",tn.getAttribute("data-tint")); return; }
+    var qa=ev.target.closest("[data-qa]");
+    if(qa){ S.expenses.push({min:S.simMs/60000,amt:parseFloat(qa.getAttribute("data-qa"))}); }
+  });
+
+  var elClk=document.getElementById("clk"),elDay=document.getElementById("day"),
+      elRate=document.getElementById("rateOut");
+
+  function render(){
+    var r=rate(),ms=S.simMs,mms=Math.floor(ms/STEP)*STEP;
+    var gross=grossAt(mms),spent=spentAt(mms),net=gross-spent;
+    var lg=grossAt(ms),lsp=spentAt(ms),owe=lsp-lg;
+    var el=elapsed(ms),frac=el/paidSec();
+    var working=workday()&&ms/60000>=S.startMin&&ms/60000<S.endMin;
+    var before=ms/60000<S.startMin;
+
+    elClk.textContent=hms(ms/1000);
+    elDay.textContent=DOW[S.dow]+(workday()?"・工作日":"・唔使返工");
+    if(!tl.matches(":active")) tl.value=Math.floor(ms/60000);
+    elRate.textContent="每秒 $"+r.toFixed(4)+"　每 5 分鐘 "+money(r*300);
+
+    var tTxt;
+    if(!workday()) tTxt="—";
+    else if(S.tmode==="left") tTxt=before?"未開工":(el>=paidSec()?"已收工":hms(S.endMin*60-ms/1000));
+    else if(S.tmode==="worked") tTxt=hms(el);
+    else tTxt = lsp<=0?"冇支出":(owe<=0?"已賺返":ms_(owe/r));
+
+    all(".tlab").forEach(function(e){ e.textContent=TLAB[S.tmode]; });
+    all(".money").forEach(function(e){
+      var big=e.classList.contains("num");
+      e.textContent = big ? money(net) : money0(net);
+      e.classList.toggle("neg", net<0);
+    });
+    all(".time").forEach(function(e){ e.textContent=tTxt; });
+    all(".pct").forEach(function(e){ e.textContent=(frac*100).toFixed(1)+"%"; });
+    all(".barfill").forEach(function(e){ e.style.width=(frac*100).toFixed(2)+"%"; });
+    all(".dt").forEach(function(e){ e.className="dot dt"+(working?"":" off"); });
+  }
+
+  var last=performance.now();
+  function frame(now){
+    var dt=now-last; last=now;
+    if(S.speed>0) S.simMs=(S.simMs+dt*S.speed)%86400000;
+    render();
+    requestAnimationFrame(frame);
+  }
+  setRMode("full");
+  requestAnimationFrame(frame);
+})();
+</script>
