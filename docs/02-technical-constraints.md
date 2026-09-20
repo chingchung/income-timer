@@ -128,7 +128,9 @@ last hour of the working day, which is the hour people most want to watch, has
 nothing. Options, none of them clean:
 
 - Start it later, around 10:00, and give up the first hour instead of the last.
-  The last hour is worth more, so this is the better trade.
+  The last hour is worth more, so this is the better trade. ActivityKit gained a
+  scheduled start in 2025, so this can be armed in advance rather than requiring
+  the app to be open at the right moment, which makes it the cleanest option.
 - Restart it at 17:00, which needs the app to be running or a push-to-start from
   a server.
 - Offer it as a thing the person starts themselves when they want it, rather
