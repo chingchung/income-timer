@@ -49,9 +49,10 @@ Salary 50,000 HKD/month, Mon–Fri, 09:00–18:00, no break deducted, a month wi
 | Per hour | 252.53 |
 | Per day | 2,272.73 |
 
-The per-second figure is the one the product is built on. Note that at 0.07/sec
-the cents digit changes roughly every 14 seconds, which is *slow* — worth knowing
-before designing the odometer. See "display resolution" below.
+The per-second figure is the one the product is built on. At this rate the cents
+digit turns over about 7 times a second, the ten-cent digit roughly every 1.4
+seconds, and the dollar digit every 14 seconds. Two decimal places is therefore
+already visibly alive: the cents blur, the dollars climb at a readable pace.
 
 ## Today's earnings
 
@@ -126,16 +127,18 @@ and minutes, above that show working days. Never show "0.0004 working years".
 
 ## Display resolution
 
-At a normal salary the cents digit moves every ~14 seconds, which will feel
-static if the odometer only shows two decimals. Options, in order of preference:
+Two decimal places is the right default. At a typical salary the cents digit
+turns over several times a second, which blurs pleasantly, while the dollars
+tick up at a pace the eye can follow. Adding further decimals makes the tail
+pure noise rather than motion.
 
-1. **Show more decimals on the in-app odometer** — four decimal places on a
-   de-emphasised trailing pair. The tail blurs constantly, the dollars climb
-   slowly. This is the visually correct answer and costs nothing.
-2. Show a secondary per-second rate readout that is visibly alive.
-3. Let high earners look fast and normal earners look slow, and accept it.
+The figure to sanity-check per user is the dollar digit. Below roughly 0.02 per
+second, which is about a 14,000/month salary on a 9-to-6, the dollars change
+less than once a minute and the whole thing starts to feel static. For those
+users, lead with a faster secondary readout such as the per-minute rate, or lean
+the layout on the ticking worked-time element instead.
 
-On the widget, show two decimals only, since it updates per minute anyway.
+On the widget, two decimals, since it only updates once a minute anyway.
 
 ## Rounding and money type
 
